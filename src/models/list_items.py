@@ -16,7 +16,7 @@ class ListItem(db.Model):
 
 
 class ListItemSchema(ma.Schema):
-    list = fields.Nested("ListSchema", exclude=["list_id"])
+    list = fields.Nested("ListSchema", exclude=["list_id", "list_items"])
     item = fields.Nested("ItemSchema", exclude=["item_id"])
 
     class Meta:
