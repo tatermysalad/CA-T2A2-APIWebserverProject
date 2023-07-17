@@ -26,7 +26,7 @@ def auth_register():
             return user_schema.dump(user), 201
     except IntegrityError as err:
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
-            return jsonify(error=f"User with email \'{request.get_json().get('email')}\' already exists"), 409
+            return jsonify(error=f"User with email '{request.get_json().get('email')}' already exists"), 409
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
             return jsonify(error=f'The {err.orig.diag.column_name} is required'), 409
         
@@ -38,4 +38,4 @@ def auth_login():
         token = create_access_token(identity=str(user.user_id),expires_delta=timedelta(days=1))
         return jsonify(email=user.email, token=token, is_admin=user.is_admin)
     else:
-        return jsonify(message='Username or password is incorrect or doesn\'t exist'), 401
+        return jsonify(message="Username or password is incorrect or doesn't exist"), 401
