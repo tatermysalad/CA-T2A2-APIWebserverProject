@@ -7,45 +7,49 @@ from models.items import Item
 from models.categories import Category
 from datetime import date
 
-db_commands = Blueprint('db', __name__)
+db_commands = Blueprint("db", __name__)
 
-@db_commands.cli.command('create')
+
+@db_commands.cli.command("create")
 def create_db():
     db.create_all()
     print("Tables created")
 
-@db_commands.cli.command('seed')
+
+@db_commands.cli.command("seed")
 def seed_db():
     categories = [
         Category(
-            name = 'Sleeping',
-            description = 'For all your sleeping items, tent, sleeping mat, pillow, etc.',
+            name="Sleeping",
+            description="For all your sleeping items, tent, sleeping mat, pillow, etc.",
+            date=date.today(),
         ),
         Category(
-            name = 'Hygiene',
-            description = 'For all your hygiene items, like toothbrush, toothpaste, and any medications.',
+            name="Hygiene",
+            description="For all your hygiene items, like toothbrush, toothpaste, and any medications.",
+            date=date.today(),
         ),
     ]
     db.session.add_all(categories)
     users = [
         User(
-            email='admin@admin.com',
-            password=bcrypt.generate_password_hash('adminadmin').decode('utf-8'),
+            email="admin@admin.com",
+            password=bcrypt.generate_password_hash("adminadmin").decode("utf-8"),
             is_admin=True,
-            date=date.today()
-        ),
-        User(
-            f_name='John',
-            l_name='Tolkien',
-            email='john@tolkien.com',
-            password=bcrypt.generate_password_hash('johntolkien').decode('utf-8'),
             date=date.today(),
         ),
         User(
-            f_name='Jane',
-            l_name='Austen',
-            email='jane@austen.com',
-            password=bcrypt.generate_password_hash('janeausten').decode('utf-8'),
+            f_name="John",
+            l_name="Tolkien",
+            email="john@tolkien.com",
+            password=bcrypt.generate_password_hash("johntolkien").decode("utf-8"),
+            date=date.today(),
+        ),
+        User(
+            f_name="Jane",
+            l_name="Austen",
+            email="jane@austen.com",
+            password=bcrypt.generate_password_hash("janeausten").decode("utf-8"),
             date=date.today(),
         ),
     ]
@@ -75,7 +79,7 @@ def seed_db():
         Item(
             name="Tent",
             description="X-Mid 2",
-            weight='1098.0',
+            weight="1098.0",
             date=date.today(),
             user=users[1],
             category=categories[0],
@@ -83,7 +87,7 @@ def seed_db():
         Item(
             name="Sleeping mat",
             description="Thermo X-lite",
-            weight='504.0',
+            weight="504.0",
             date=date.today(),
             user=users[1],
             category=categories[0],
@@ -91,7 +95,7 @@ def seed_db():
         Item(
             name="Sleeping mat",
             description="S2S Pad",
-            weight='705.0',
+            weight="705.0",
             date=date.today(),
             user=users[0],
             category=categories[0],
@@ -103,18 +107,21 @@ def seed_db():
             list=lists[0],
             item=items[0],
             quantity=1,
+            date=date.today(),
         ),
         ListItem(
             list=lists[1],
             item=items[1],
             quantity=2,
+            date=date.today(),
         ),
     ]
     db.session.add_all(list_items)
     db.session.commit()
     print("Tables seeded")
 
-@db_commands.cli.command('drop')
+
+@db_commands.cli.command("drop")
 def drop_db():
     db.drop_all()
     print("Tables dropped")

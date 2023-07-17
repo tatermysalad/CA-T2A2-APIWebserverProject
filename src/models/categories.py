@@ -8,6 +8,7 @@ class Category(db.Model):
     category_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     description = db.Column(db.Text)
+    date = db.Column(db.Date)
 
     items = db.relationship("Item", back_populates="category", cascade="all, delete")
 

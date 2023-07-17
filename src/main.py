@@ -5,6 +5,7 @@ from controllers.cli_controller import db_commands
 from controllers.auth_controller import auth_bp
 from controllers.list_controller import list_bp
 from controllers.item_controller import item_bp
+from controllers.list_items_controller import list_items_bp
 
 def create_app():
     app = Flask(__name__)
@@ -27,5 +28,7 @@ def create_app():
     app.register_blueprint(list_bp)
 
     app.register_blueprint(item_bp)
+
+    app.register_blueprint(list_items_bp)
 
     return app
