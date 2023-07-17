@@ -9,7 +9,6 @@ class Item(db.Model):
     name = db.Column(db.String(100))
     description = db.Column(db.Text)
     weight = db.Column(db.Float, default=0.0)
-    quantity = db.Column(db.Integer, default=1)
     date = db.Column(db.Date)
 
     category_id = db.Column(db.Integer, db.ForeignKey("categories.category_id"))
@@ -23,8 +22,8 @@ class Item(db.Model):
 
 
 class ItemSchema(ma.Schema):
-    category = fields.Nested("CategorySchema")
-    user = fields.Nested("UserSchema", only=["name", "email"])
+    category = fields.Nested("CategorySchema", only=['name'])
+    user = fields.Nested("UserSchema", only=["email"])
 
     class Meta:
         ordered = True
@@ -33,8 +32,8 @@ class ItemSchema(ma.Schema):
             "name",
             "description",
             "weight",
-            "quantity",
             "date",
+            "category",
             "user",
         )
 

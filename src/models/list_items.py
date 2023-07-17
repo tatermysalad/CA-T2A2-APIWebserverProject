@@ -6,6 +6,8 @@ class ListItem(db.Model):
     __tablename__ = "list_items"
 
     list_item_id = db.Column(db.Integer, primary_key=True)
+    quantity = db.Column(db.Integer, default=1)
+
     list_id = db.Column(db.Integer, db.ForeignKey("lists.list_id"), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey("items.item_id"), nullable=False)
 
