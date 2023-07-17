@@ -51,7 +51,7 @@ def create_list():
 
 @list_bp.route('/<int:id>', methods=['PUT', 'PATCH'])
 @jwt_required()
-def update_card(id):
+def update_list(id):
     body_data = request.get_json()
     user = get_jwt_identity()
     user_admin = db.session.scalar(db.select(User).filter_by(user_id=user)).is_admin
@@ -71,7 +71,7 @@ def update_card(id):
 def delete_list(id):
     user = get_jwt_identity()
     user_admin = db.session.scalar(db.select(User).filter_by(user_id=user)).is_admin
-    list = db.session.scalar(db.select(List).filter_by(list_id=id))
+    item = db.session.scalar(db.select(Item).filter_by(list_id=id))
     if list:
         if not(user_admin or list.user_id == int(user)):
             return jsonify(error=f"Not authorised to delete list id='{id}'")

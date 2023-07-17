@@ -20,7 +20,7 @@ class User(db.Model):
 
 class UserSchema(ma.Schema):
     lists = fields.List(fields.Nested("ListSchema", exclude=["user"]))
-    # items = fields.List(fields.Nested("ItemSchema", exclude=["user"]))
+    items = fields.List(fields.Nested("ItemSchema", exclude=["user"]))
 
     class Meta:
         ordered = True

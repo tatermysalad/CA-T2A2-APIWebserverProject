@@ -76,9 +76,24 @@ def seed_db():
             name="Tent",
             description="X-Mid 2",
             weight='1098.0',
-            quantity=1,
             date=date.today(),
             user=users[1],
+            category=categories[0],
+        ),
+        Item(
+            name="Sleeping mat",
+            description="Thermo X-lite",
+            weight='504.0',
+            date=date.today(),
+            user=users[1],
+            category=categories[0],
+        ),
+        Item(
+            name="Sleeping mat",
+            description="S2S Pad",
+            weight='705.0',
+            date=date.today(),
+            user=users[0],
             category=categories[0],
         ),
     ]
@@ -87,6 +102,12 @@ def seed_db():
         ListItem(
             list=lists[0],
             item=items[0],
+            quantity=1,
+        ),
+        ListItem(
+            list=lists[1],
+            item=items[1],
+            quantity=2,
         ),
     ]
     db.session.add_all(list_items)
