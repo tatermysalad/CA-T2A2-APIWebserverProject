@@ -23,6 +23,7 @@ class UserSchema(ma.Schema):
     # items = fields.List(fields.Nested("ItemSchema", exclude=["user"]))
 
     class Meta:
+        ordered = True
         fields = ("user_id", "f_name", "l_name", "email", "password", "is_admin")
 
     password = ma.String(validate=Length(min=6))

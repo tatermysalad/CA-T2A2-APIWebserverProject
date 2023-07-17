@@ -35,10 +35,10 @@ def seed_db():
             date=date.today()
         ),
         User(
-            f_name='Bob',
-            l_name='Ross',
-            email='bob@ross.com',
-            password=bcrypt.generate_password_hash('bobross').decode('utf-8'),
+            f_name='John',
+            l_name='Tolkien',
+            email='john@tolkien.com',
+            password=bcrypt.generate_password_hash('johntolkien').decode('utf-8'),
             date=date.today(),
         ),
         User(
