@@ -109,7 +109,7 @@ You should be able to use the application in your browser with the URL prefix 12
 | '/list' | GET | | | |
 | '/list/{id}' | GET | | | |
 | '/list' | POST | | {"name" : "Cart", "description" : "Card 5 desc"}| |
-| '/list/{id}' | POST | | | |
+| '/list/{id}' | POST | | {<br>"name" : "Cart", <br>"description" : "Card 5 desc"<br>}| |
 
 
 ## **R6** - ERD of the app <a name="#req6"></a>
