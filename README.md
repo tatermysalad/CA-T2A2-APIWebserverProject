@@ -1,6 +1,6 @@
-# T2A2 API Webserver Project
+## T2A2 API Webserver Project
 
-## Links
+### Links
 
 [GitHub](https://github.com/tatermysalad/CA-T2A2-APIWebserverProject)
 <br>
@@ -32,15 +32,7 @@
 
 [**R10** - Planning and tracking of tasks](#req10)
 
-[References](#references)
-
-## Style guide
-
-[Python Style Guide - Python Enhancement Proposal 8](https://peps.python.org/pep-0008/)
-
 ## Installation instructions <a name="installation"></a>
-
-Installation instructions
 
 Clone or download the repository from Github.
 
@@ -96,22 +88,37 @@ Run the application:
 
 You should be able to use the application in your browser with the URL prefix 127.0.0.1:5000/, localhost:5000/, or through setup with Insomnia or Postman.
 
-## R1 - Identification of the problem you are trying to solve by building this particular app ]<a name="#req1"></a>
+## **R1** - The problem <a name="#req1"></a>
 
-## R2 - Why is it a problem that needs solving ]<a name="#req2"></a>
+## **R2** - Why do the problems need solving <a name="#req2"></a>
 
-## R3 - Why have you chosen this database system. What are the drawbacks compared to others ]<a name="#req3"></a>
+## **R3** - Database system <a name="#req3"></a>
 
-## R4 - Identify and discuss the key functionalities and benefits of an ORM <a name="#req4"></a>
+## **R4** - ORM (key functionalities and benefits <a name="(#req4"></a>
 
-## R5 - Document all endpoints for your API <a name="#req5"></a>
+## **R5** - Endpoints documentation <a name="#req5"></a>
 
-## R6 - An ERD for your app <a name="#req6"></a>
+### Authentication
+| Endpoint    | Method | Description | Request Body (if applicable) | Response Body (if applicable) |
+|---------|-----|--------|--------|--------|
+| '/auth/register'| POST | | | |
+| '/auth/login'   | POST | | | |
+### Lists
+| Endpoint    | Method | Description | Request Body (if applicable) | Response Body (if applicable) |
+|---------|-----|--------------------|--------|--------|
+| '/list' | GET | | | |
+| '/list/{id}' | GET | | | |
+| '/list' | POST | | {"name" : "Cart", "description" : "Card 5 desc"}| |
+| '/list/{id}' | POST | | {<br>"name" : "Cart", <br>"description" : "Card 5 desc"<br>}| |
 
-## R7 - Detail any third party services that your app will use <a name="#req7"></a>
 
-## R8 - Describe your projects models in terms of the relationships they have with each other <a name="#req8"></a>
+## **R6** - ERD of the app <a name="#req6"></a>
 
-## R9 - Discuss the database relations to be implemented in your application <a name="#req9"></a>
+![Gear Cache API ERD](/docs/GearCacheERD.png)
+## **R7** - Detail any third party services in the app <a name="#req7"></a>
 
-## R10* - Describe the way tasks are allocated and tracked in your project <a name="#req10"></a>
+## **R8** - Describe project models <a name="#req8"></a>
+
+## **R9** - Discuss the database relations <a name="#req9"></a>
+
+## **R10** - Planning and tracking of tasks <a name="#req10"></a>
