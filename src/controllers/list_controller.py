@@ -71,7 +71,7 @@ def update_list(id):
 def delete_list(id):
     user = get_jwt_identity()
     user_admin = db.session.scalar(db.select(User).filter_by(user_id=user)).is_admin
-    item = db.session.scalar(db.select(Item).filter_by(list_id=id))
+    list = db.session.scalar(db.select(Item).filter_by(list_id=id))
     if list:
         if not(user_admin or list.user_id == int(user)):
             return jsonify(error=f"Not authorised to delete list id='{id}'")
