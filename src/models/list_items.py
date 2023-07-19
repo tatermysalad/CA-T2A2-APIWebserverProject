@@ -7,7 +7,7 @@ class ListItem(db.Model):
 
     list_item_id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, default=1)
-
+    date = db.Column(db.Date)
     list_id = db.Column(db.Integer, db.ForeignKey("lists.list_id"), nullable=False)
     item_id = db.Column(db.Integer, db.ForeignKey("items.item_id"), nullable=False)
 
@@ -16,12 +16,12 @@ class ListItem(db.Model):
 
 
 class ListItemSchema(ma.Schema):
-    list = fields.Nested("ListSchema", exclude=["list_item"])
-    item = fields.Nested("ItemSchema", exclude=["list_item"])
+    list = fields.Nested("ListSchema", exclude=["list_id", "list_items"])
+    item = fields.Nested("ItemSchema", exclude=["item_id"])
 
     class Meta:
         ordered = True
-        fields = ("list_item_id", "list", "item")
+        fields = ("list_item_id", "quantity", "date", "list", "item")
 
 
 list_item_schema = ListItemSchema()

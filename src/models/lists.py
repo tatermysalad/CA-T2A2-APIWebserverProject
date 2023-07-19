@@ -20,13 +20,13 @@ class List(db.Model):
 
 
 class ListSchema(ma.Schema):
-    user = fields.Nested("UserSchema", only=["f_name", "l_name", "email"])
+    user = fields.Nested("UserSchema", only=["email"])
     list_items = fields.List(fields.Nested("ListItemSchema", exclude=["list"]))
     category = fields.Nested("CategorySchema", only=['name'])
 
     class Meta:
         ordered = True
-        fields = ("list_id", "name", "description", "date", "user", "category") #, "list_items"
+        fields = ("list_id", "name", "description", "date", "user", "category", "list_items")
 
 
 list_schema = ListSchema()
