@@ -1,14 +1,15 @@
-from flask import Blueprint, request, jsonify
-from init import db
 from datetime import date
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
+import functools
+from init import db
 from models.list_items import ListItem, list_item_schema, list_items_schema
 from models.lists import List, list_schema, lists_schema
 from models.items import Item, item_schema, items_schema
 from models.users import User
-from flask_jwt_extended import jwt_required, get_jwt_identity
-import functools
 
-list_items_bp = Blueprint("list_items", __name__, url_prefix="/list_items")
+
+list_item_bp = Blueprint("list_item", __name__, url_prefix="/list_item")
 
 
 def authorise_as_user_or_admin(fn):
@@ -45,7 +46,7 @@ def authorise_as_user_or_admin(fn):
     return wrapper
 
 
-@list_items_bp.route("/")
+@list_item_bp.route("/")
 @jwt_required()
 def get_list_items():
     user_id = get_jwt_identity()
@@ -65,15 +66,15 @@ def get_list_items():
     return list_items_schema.dump(list_items)
 
 
-@list_items_bp.route("/<int:id>")
+@list_item_bp.route("/<int:id>")
 @jwt_required()
 @authorise_as_user_or_admin
-def get_one_list_item(id):
+def get_list_item(id):
     list_item = db.session.scalar(db.select(ListItem).filter_by(list_item_id=id))
     return list_item_schema.dump(list_item)
 
 
-@list_items_bp.route("/", methods=["POST"])
+@list_item_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_list_item():
     body_data = request.get_json()
@@ -102,7 +103,9 @@ def create_list_item():
         # if not allowed to create
         else:
             return (
-                jsonify(message=f"List or Item not found for user with email='{user.email}'"),
+                jsonify(
+                    message=f"List or Item not found for user with email='{user.email}'"
+                ),
                 404,
             )
     # lets user know unable to find list with id
@@ -119,10 +122,10 @@ def create_list_item():
         )
 
 
-@list_items_bp.route("/<int:id>", methods=["PUT", "PATCH"])
+@list_item_bp.route("/<int:id>", methods=["PUT", "PATCH"])
 @jwt_required()
 @authorise_as_user_or_admin
-def update_one_list_item(id):
+def update_list_item(id):
     body_data = request.get_json()
     list_item = db.session.scalar(db.select(ListItem).filter_by(list_item_id=id))
     if list_item:
@@ -142,15 +145,16 @@ def update_one_list_item(id):
             return list_item_schema.dump(list_item)
         else:
             return (
-                jsonify(message=f"List with id='{body_data.get('list_id')}' or Item with id='{body_data.get('item_id')}' not found for user with email='{user.email}'"),
+                jsonify(
+                    message=f"List with id='{body_data.get('list_id')}' or Item with id='{body_data.get('item_id')}' not found for user with email='{user.email}'"
+                ),
                 403,
             )
-
     else:
         return jsonify(message=f"Not found {id}"), 404
 
 
-@list_items_bp.route("/<int:id>", methods=["DELETE"])
+@list_item_bp.route("/<int:id>", methods=["DELETE"])
 @jwt_required()
 @authorise_as_user_or_admin
 def delete_list_item(id):
