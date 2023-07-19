@@ -10,27 +10,27 @@
 
 ### Contents
 
-[Installation Instructions](#installation-instructions-)
+[Installation Instructions](#installation-instructions)
 
-[**R1** - The problem](#r1---the-problem-)
+[**R1** - The problem](#r1---the-problem)
 
-[**R2** - Why do the problems need solving](#r2---why-do-the-problems-need-solving-)
+[**R2** - Why do the problems need solving](#r2---why-do-the-problems-need-solving)
 
-[**R3** - Database system](#r3---database-system-)
+[**R3** - Database system](#r3---database-system)
 
-[**R4** - ORM (key functionalities and benefits)](#r4---orm-key-functionalities-and-benefits-)
+[**R4** - ORM (key functionalities and benefits)](#r4---orm-key-functionalities-and-benefits)
 
-[**R5** - Endpoints documentation](#r5---endpoints-documentation-)
+[**R5** - Endpoints documentation](#r5---endpoints-documentation)
 
-[**R6** - ERD of the app](#r6---erd-of-the-app-)
+[**R6** - ERD of the app](#r6---erd-of-the-app)
 
-[**R7** - Detail any third party services in the app](#r7---detail-any-third-party-services-in-the-app-)
+[**R7** - Detail any third party services in the app](#r7---detail-any-third-party-services-in-the-app)
 
-[**R8** - Describe project models](#r8---describe-project-models-)
+[**R8** - Describe project models](#r8---describe-project-models)
 
-[**R9** - Discuss the database relations](#r9---discuss-the-database-relations-)
+[**R9** - Discuss the database relations](#r9---discuss-the-database-relations)
 
-[**R10** - Planning and tracking of tasks](#r10---planning-and-tracking-of-tasks-)
+[**R10** - Planning and tracking of tasks](#r10---planning-and-tracking-of-tasks)
 
 ## Installation instructions
 
