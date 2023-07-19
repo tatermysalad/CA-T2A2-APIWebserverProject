@@ -10,7 +10,7 @@
 
 ### Contents
 
-[Installation Instructions](#installation)
+[Installation Instructions](#installation-instructions-)
 
 [**R1** - The problem](#req1)
 
