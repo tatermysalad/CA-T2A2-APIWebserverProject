@@ -106,9 +106,9 @@ You should be able to use the application in your browser with the URL prefix 12
 ### Lists
 | Endpoint    | Method | Description | Request Body (if applicable) | Response Body (if applicable) |
 |---------|-----|--------------------|--------|--------|
-| '/list' | GET | Get all lists | | `{`<br>`  "list_id": 3,`<br>`  "name": "Ultralight 1",`<br>`  "description": "Ultralight Hiking",`<br>`  "date": "2023-07-18",`<br>`  "user": {`<br>`    "email": "jane@austen.com"`<br>`  },`<br>`  "list_items": []`<br>`}` |
-| '/list/{id}' | GET | Get a list by ID | | |
-| '/list' | POST | Create a new list | `{`<br>`  "name" : "Cart",`<br>`  "description" : "Card 5 desc"`<br>`}` | |
+| '/list' | GET | Get all lists | | **200 OK** <br>`{`<br>`  "list_id": 3,`<br>`  "name": "Ultralight 1",`<br>`  "description": "Ultralight Hiking",`<br>`  "date": "2023-07-18",`<br>`  "user": {`<br>`    "email": "jane@austen.com"`<br>`  },`<br>`  "list_items": []`<br>`}` |
+| '/list/{id}' | GET | Get a list by ID | | **200 OK** <br>`{`<br>`  "list_id": 3,`<br>`  "name": "Ultralight 1",`<br>`  "description": "Ultralight Hiking",`<br>`  "date": "2023-07-18",`<br>`  "user": {`<br>`    "email": "jane@austen.com"`<br>`  },`<br>`  "list_items": []`<br>`}`<br>**404 Not Found** <br>`{`<br>`  "message": "List with id='1' not found for user id='3'"`<br>`}`|
+| '/list' | POST | Create a new list | `{`<br>`  "name" : "5+ night bag",`<br>`  "description" : "Bag for longer trips"`<br>`}` | `{`<br>`  "list_id": 5,`<br>`  "name": "5+ night bag",`<br>`  "description": "Bag for longer trips",`<br>`  "date": "2023-07-17",`<br>`  "user": {`<br>`    "f_name": "John",`<br>`    "l_name": "Tolkien",`<br>`    "email": "john@tolkien.com"`<br>`  }`<br>`}` |
 | '/list/{id}' | PUT, PATCH | Update a list by ID | `{`<br>`  "name" : "Cart",`<br>`  "description" : "Card 5 desc"`<br>`}` | |
 | '/list/{id}' | DELETE | Delete a list by ID | | |
 
