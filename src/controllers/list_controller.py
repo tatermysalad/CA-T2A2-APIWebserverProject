@@ -26,14 +26,14 @@ def get_all_lists():
 @list_bp.route('/<int:id>')
 @jwt_required()
 def get_list(id):
-    user = get_jwt_identity()
-    user_admin = db.session.scalar(db.select(User).filter_by(user_id=user)).is_admin
+    user_id = get_jwt_identity()
+    user = db.session.scalar(db.select(User).filter_by(user_id=user))
     list = db.session.scalar(db.select(List).filter_by(list_id=id))
     # if user admin display, or check if user owns the list
-    if list and (user_admin or list.user_id == int(user)):
+    if list and (user.is_admin or list.user_id == int(user)):
         return list_schema.dump(list)
     else:
-        return jsonify(message=f"List with id='{id}' not found for user id='{user}'"), 404
+        return jsonify(message=f"List with id='{id}' not found for user with email='{user.email}'"), 404
     
 @list_bp.route('/', methods=['POST'])
 @jwt_required()
