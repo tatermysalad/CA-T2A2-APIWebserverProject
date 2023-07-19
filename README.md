@@ -12,27 +12,27 @@
 
 [Installation Instructions](#installation-instructions-)
 
-[**R1** - The problem](#req1)
+[**R1** - The problem](#r1---the-problem-)
 
-[**R2** - Why do the problems need solving](#req2)
+[**R2** - Why do the problems need solving](#r2---why-do-the-problems-need-solving-)
 
-[**R3** - Database system](#req3)
+[**R3** - Database system](#r3---database-system-)
 
-[**R4** - ORM (key functionalities and benefits)](#req4)
+[**R4** - ORM (key functionalities and benefits)](#r4---orm-key-functionalities-and-benefits-)
 
-[**R5** - Endpoints documentation](#req5)
+[**R5** - Endpoints documentation](#r5---endpoints-documentation-)
 
-[**R6** - ERD of the app](#req6)
+[**R6** - ERD of the app](#r6---erd-of-the-app-)
 
-[**R7** - Detail any third party services in the app](#req7)
+[**R7** - Detail any third party services in the app](#r7---detail-any-third-party-services-in-the-app-)
 
-[**R8** - Describe project models](#req8)
+[**R8** - Describe project models](#r8---describe-project-models-)
 
-[**R9** - Discuss the database relations](#req9)
+[**R9** - Discuss the database relations](#r9---discuss-the-database-relations-)
 
-[**R10** - Planning and tracking of tasks](#req10)
+[**R10** - Planning and tracking of tasks](#r10---planning-and-tracking-of-tasks-)
 
-## Installation instructions <a name="installation"></a>
+## Installation instructions
 
 Clone or download the repository from Github.
 
@@ -88,15 +88,15 @@ Run the application:
 
 You should be able to use the application in your browser with the URL prefix 127.0.0.1:5000/, localhost:5000/, or through setup with Insomnia or Postman.
 
-## **R1** - The problem <a name="#req1"></a>
+## **R1** - The problem 
 
-## **R2** - Why do the problems need solving <a name="#req2"></a>
+## **R2** - Why do the problems need solving 
 
-## **R3** - Database system <a name="#req3"></a>
+## **R3** - Database system 
 
-## **R4** - ORM (key functionalities and benefits <a name="(#req4"></a>
+## **R4** - ORM (key functionalities and benefits 
 
-## **R5** - Endpoints documentation <a name="#req5"></a>
+## **R5** - Endpoints documentation 
 
 ### Authentication
 | Endpoint    | Method | Description | Request Body (if applicable) | Response Body (if applicable) |
@@ -112,13 +112,13 @@ You should be able to use the application in your browser with the URL prefix 12
 | '/list/{id}' | POST | | {<br>     "name" : "Cart", <br>       "description" : "Card 5 desc"<br>}| |
 
 
-## **R6** - ERD of the app <a name="#req6"></a>
+## **R6** - ERD of the app 
 
 ![Gear Cache API ERD](/docs/GearCacheERD.png)
-## **R7** - Detail any third party services in the app <a name="#req7"></a>
+## **R7** - Detail any third party services in the app 
 
-## **R8** - Describe project models <a name="#req8"></a>
+## **R8** - Describe project models 
 
-## **R9** - Discuss the database relations <a name="#req9"></a>
+## **R9** - Discuss the database relations 
 
-## **R10** - Planning and tracking of tasks <a name="#req10"></a>
+## **R10** - Planning and tracking of tasks 
