@@ -6,7 +6,7 @@ from init import db
 from models.categories import Category, category_schema, categories_schema
 from models.users import User
 
-category_bp = Blueprint("category", __name__, url_prefix="/category")
+categories_bp = Blueprint("categories", __name__, url_prefix="/categories")
 
 def authorise_as_admin(fn):
     @functools.wraps(fn)
@@ -19,21 +19,21 @@ def authorise_as_admin(fn):
             return jsonify(error="Not authorised to perform action"), 403    
     return wrapper
 
-@category_bp.route('/')
+@categories_bp.route('/')
 @jwt_required()
 @authorise_as_admin
 def get_categories():
     categories = db.session.scalars(db.select(Category).order_by(Category.category_id.asc()))
     return categories_schema.dump(categories)
 
-@category_bp.route('/<int:id>')
+@categories_bp.route('/<int:id>')
 @jwt_required()
 @authorise_as_admin
 def get_category(id):
     category = db.session.scalar(db.select(Category).filter_by(category_id=id))
     return category_schema.dump(category)
 
-@category_bp.route('/', methods=["POST"])
+@categories_bp.route('/', methods=["POST"])
 @jwt_required()
 @authorise_as_admin
 def create_category():
@@ -47,7 +47,7 @@ def create_category():
     db.session.commit()
     return category_schema.dump(category), 201
 
-@category_bp.route('/<int:id>', methods=["PUT", "PATCH"])
+@categories_bp.route('/<int:id>', methods=["PUT", "PATCH"])
 @jwt_required()
 @authorise_as_admin
 def update_category(id):
@@ -61,7 +61,7 @@ def update_category(id):
     else:
         return jsonify(message="category not found"), 404
     
-@category_bp.route('/<int:id>', methods=["DELETE"])
+@categories_bp.route('/<int:id>', methods=["DELETE"])
 @jwt_required()
 @authorise_as_admin
 def delete_category(id):

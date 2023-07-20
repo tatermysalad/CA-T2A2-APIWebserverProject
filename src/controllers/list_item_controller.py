@@ -9,7 +9,7 @@ from models.items import Item, item_schema, items_schema
 from models.users import User
 
 
-list_item_bp = Blueprint("list_item", __name__, url_prefix="/list_item")
+list_items_bp = Blueprint("list_items", __name__, url_prefix="/list_items")
 
 
 def authorise_as_user_or_admin(fn):
@@ -46,7 +46,7 @@ def authorise_as_user_or_admin(fn):
     return wrapper
 
 
-@list_item_bp.route("/")
+@list_items_bp.route("/")
 @jwt_required()
 def get_list_items():
     user_id = get_jwt_identity()
@@ -61,12 +61,12 @@ def get_list_items():
         list_items = (
             db.session.query(ListItem)
             .join(Item, ListItem.item_id == Item.item_id)
-            .filter(Item.user_id == int(user))
+            .filter(Item.user_id == int(user_id))
         )
     return list_items_schema.dump(list_items)
 
 
-@list_item_bp.route("/<int:id>")
+@list_items_bp.route("/<int:id>")
 @jwt_required()
 @authorise_as_user_or_admin
 def get_list_item(id):
@@ -74,7 +74,7 @@ def get_list_item(id):
     return list_item_schema.dump(list_item)
 
 
-@list_item_bp.route("/", methods=["POST"])
+@list_items_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_list_item():
     body_data = request.get_json()
@@ -88,7 +88,7 @@ def create_list_item():
     )
     if list_allowed and item_allowed:
         if user.is_admin or (
-            item_allowed.user_id == int(user) and list_allowed.user_id == int(user)
+            item_allowed.user_id == int(user_id) and list_allowed.user_id == int(user_id)
         ):
             body_data = request.get_json()
             list_item = ListItem(
@@ -122,7 +122,7 @@ def create_list_item():
         )
 
 
-@list_item_bp.route("/<int:id>", methods=["PUT", "PATCH"])
+@list_items_bp.route("/<int:id>", methods=["PUT", "PATCH"])
 @jwt_required()
 @authorise_as_user_or_admin
 def update_list_item(id):
@@ -154,7 +154,7 @@ def update_list_item(id):
         return jsonify(message=f"Not found {id}"), 404
 
 
-@list_item_bp.route("/<int:id>", methods=["DELETE"])
+@list_items_bp.route("/<int:id>", methods=["DELETE"])
 @jwt_required()
 @authorise_as_user_or_admin
 def delete_list_item(id):
