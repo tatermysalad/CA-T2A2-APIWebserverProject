@@ -7,9 +7,9 @@ from models.users import User
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import date
 
-item_bp = Blueprint('item', __name__, url_prefix='/item')
+items_bp = Blueprint('items', __name__, url_prefix='/items')
 
-@item_bp.route('/')
+@items_bp.route('/')
 @jwt_required()
 def get_item():
     # if user admin display all lists, otherwise user specific
@@ -22,7 +22,7 @@ def get_item():
         items = db.session.scalars(db.select(Item).filter_by(user_id=user))
         return items_schema.dump(items)
     
-@item_bp.route('/<int:id>')
+@items_bp.route('/<int:id>')
 @jwt_required()
 def get_list(id):
     user = get_jwt_identity()
@@ -34,7 +34,7 @@ def get_list(id):
     else:
         return jsonify(message=f"Item with id='{id}' not found for user id='{user}'"), 404
     
-@item_bp.route('/', methods=['POST'])
+@items_bp.route('/', methods=['POST'])
 @jwt_required()
 def create_item():
     body_data = request.get_json()
@@ -51,7 +51,7 @@ def create_item():
     db.session.commit()
     return item_schema.dump(item), 201
 
-@item_bp.route('/<int:id>', methods=['PUT', 'PATCH'])
+@items_bp.route('/<int:id>', methods=['PUT', 'PATCH'])
 @jwt_required()
 def update_item(id):
     body_data = request.get_json()
@@ -70,7 +70,7 @@ def update_item(id):
     else:
         return jsonify(message=f"List with id='{id}' not found for user id='{user}'"), 404
 
-@item_bp.route('/<int:id>', methods=['DELETE'])
+@items_bp.route('/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_item(id):
     user = get_jwt_identity()

@@ -1,5 +1,5 @@
 from init import db, ma
-from marshmallow import fields
+from marshmallow import fields, post_dump
 from marshmallow.validate import Length
 
 
@@ -22,12 +22,20 @@ class List(db.Model):
 class ListSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=["email"])
     list_items = fields.List(fields.Nested("ListItemSchema", exclude=["list"]))
-    category = fields.Nested("CategorySchema", only=['name'])
 
+     # New field for total weight
+    total_weight = fields.Float(dump_only=True)
+
+    # Method to calculate the total weight based on list_items
+    @post_dump
+    def calculate_total_weight(self, data, **kwargs):
+        list_items = data.get('list_items', [])
+        total_weight = [item.get('quantity', 1) * item["item"].get('weight', 0) for item in list_items]
+        data['total_weight'] = sum(total_weight)
+        return data
     class Meta:
         ordered = True
-        fields = ("list_id", "name", "description", "date", "user", "category", "list_items")
-
+        fields = ("list_id", "name", "description", "date", "user", "list_items", "total_weight")
 
 list_schema = ListSchema()
 lists_schema = ListSchema(many=True)

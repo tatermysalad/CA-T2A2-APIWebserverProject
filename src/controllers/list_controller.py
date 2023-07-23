@@ -8,34 +8,34 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import date
 import functools
 
-list_bp = Blueprint('list', __name__, url_prefix='/list')
+lists_bp = Blueprint('lists', __name__, url_prefix='/lists')
 
-@list_bp.route('/')
+@lists_bp.route('/')
 @jwt_required()
 def get_all_lists():
     # if user admin display all lists, otherwise user specific
-    user = get_jwt_identity()
-    user_admin = db.session.scalar(db.select(User).filter_by(user_id=user)).is_admin
-    if user_admin:
+    user_id = get_jwt_identity()
+    user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+    if user.is_admin:
         lists = db.session.scalars(db.select(List).order_by(List.date.desc()))
         return lists_schema.dump(lists)
     else:
-        lists = db.session.scalars(db.select(List).filter_by(user_id=user))
+        lists = db.session.scalars(db.select(List).filter_by(user_id=user_id))
         return lists_schema.dump(lists)
 
-@list_bp.route('/<int:id>')
+@lists_bp.route('/<int:id>')
 @jwt_required()
 def get_list(id):
     user_id = get_jwt_identity()
-    user = db.session.scalar(db.select(User).filter_by(user_id=user))
+    user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
     list = db.session.scalar(db.select(List).filter_by(list_id=id))
     # if user admin display, or check if user owns the list
-    if list and (user.is_admin or list.user_id == int(user)):
+    if list and (user.is_admin or list.user_id == int(user_id)):
         return list_schema.dump(list)
     else:
         return jsonify(message=f"List with id='{id}' not found for user with email='{user.email}'"), 404
     
-@list_bp.route('/', methods=['POST'])
+@lists_bp.route('/', methods=['POST'])
 @jwt_required()
 def create_list():
     body_data = request.get_json()
@@ -49,31 +49,31 @@ def create_list():
     db.session.commit()
     return list_schema.dump(list), 201
 
-@list_bp.route('/<int:id>', methods=['PUT', 'PATCH'])
+@lists_bp.route('/<int:id>', methods=['PUT', 'PATCH'])
 @jwt_required()
 def update_list(id):
     body_data = request.get_json()
-    user = get_jwt_identity()
-    user_admin = db.session.scalar(db.select(User).filter_by(user_id=user)).is_admin
+    user_id = get_jwt_identity()
+    user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
     list = db.session.scalar(db.select(List).filter_by(list_id=id))
     if list:
-        if not(user_admin or list.user_id == int(user)):
+        if not(user.is_admin or list.user_id == int(user_id)):
             return jsonify(error=f"Not authorised to edit list id='{id}'")
         list.name = body_data.get('name') or list.name
         list.description = body_data.get('description') or list.description
         db.session.commit()
         return list_schema.dump(list)
     else:
-        return jsonify(message=f"List with id='{id}' not found for user id='{user}'"), 404
+        return jsonify(message=f"List with id='{id}' not found for user with email='{user.email}'"), 404
 
-@list_bp.route('/<int:id>', methods=['DELETE'])
+@lists_bp.route('/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_list(id):
-    user = get_jwt_identity()
-    user_admin = db.session.scalar(db.select(User).filter_by(user_id=user)).is_admin
+    user_id = get_jwt_identity()
+    user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
     list = db.session.scalar(db.select(Item).filter_by(list_id=id))
     if list:
-        if not(user_admin or list.user_id == int(user)):
+        if not(user.is_admin or list.user_id == int(user_id)):
             return jsonify(error=f"Not authorised to delete list id='{id}'")
         db.session.delete(list)
         db.session.commit()

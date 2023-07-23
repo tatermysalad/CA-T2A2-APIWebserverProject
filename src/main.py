@@ -3,10 +3,10 @@ import os
 from init import db, ma, bcrypt, jwt 
 from controllers.cli_controller import db_commands
 from controllers.auth_controller import auth_bp
-from controllers.list_controller import list_bp
-from controllers.item_controller import item_bp
-from controllers.list_item_controller import list_item_bp
-from controllers.category_controller import category_bp
+from controllers.list_controller import lists_bp
+from controllers.item_controller import items_bp
+from controllers.list_item_controller import list_items_bp
+from controllers.category_controller import categories_bp
 
 def create_app():
     app = Flask(__name__)
@@ -26,12 +26,12 @@ def create_app():
 
     app.register_blueprint(auth_bp)
 
-    app.register_blueprint(list_bp)
+    app.register_blueprint(lists_bp)
 
-    app.register_blueprint(item_bp)
+    app.register_blueprint(items_bp)
 
-    app.register_blueprint(list_item_bp)
+    app.register_blueprint(list_items_bp)
 
-    app.register_blueprint(category_bp)
+    app.register_blueprint(categories_bp)
 
     return app
