@@ -2,7 +2,7 @@ from flask import Flask
 import os
 from init import db, ma, bcrypt, jwt 
 from controllers.cli_controller import db_commands
-from controllers.auth_controller import auth_bp
+from controllers.user_controller import user_bp
 from controllers.list_controller import lists_bp
 from controllers.item_controller import items_bp
 from controllers.list_item_controller import list_items_bp
@@ -24,7 +24,7 @@ def create_app():
 
     app.register_blueprint(db_commands)
 
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(user_bp)
 
     app.register_blueprint(lists_bp)
 

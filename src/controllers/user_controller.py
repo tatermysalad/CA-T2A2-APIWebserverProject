@@ -7,7 +7,7 @@ from psycopg2 import errorcodes
 from datetime import timedelta
 import functools
 
-auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
+user_bp = Blueprint('user', __name__, url_prefix='/user')
 
 def authorise_as_admin(fn):
     @functools.wraps(fn)
@@ -21,8 +21,8 @@ def authorise_as_admin(fn):
     return wrapper
 
 
-@auth_bp.route('/register', methods=['POST'])
-def auth_register():
+@user_bp.route('/register', methods=['POST'])
+def user_register():
     try:
         body_data = request.get_json()
         # Create a new user based on POST information
@@ -42,8 +42,8 @@ def auth_register():
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
             return jsonify(error=f'The {err.orig.diag.column_name} is required'), 409
         
-@auth_bp.route('/login', methods=['POST'])
-def auth_login():
+@user_bp.route('/login', methods=['POST'])
+def user_login():
     body_data = request.get_json()
     user = db.session.scalar(db.select(User).filter_by(email=body_data.get('email')))
     if user and bcrypt.check_password_hash(user.password,body_data.get('password')):
@@ -52,7 +52,7 @@ def auth_login():
     else:
         return jsonify(message="Username or password is incorrect"), 401
     
-@auth_bp.route('/<int:id>', methods=["PUT", "PATCH"])
+@user_bp.route('/update/<int:id>', methods=["PUT", "PATCH"])
 @jwt_required()
 @authorise_as_admin
 def update_account(id):
@@ -74,7 +74,7 @@ def update_account(id):
     else:
         return jsonify(message=f"User not found with id='{id}'"), 404
 
-@auth_bp.route('/<int:id>', methods=["DELETE"])
+@user_bp.route('/delete/<int:id>', methods=["DELETE"])
 @jwt_required()
 @authorise_as_admin
 def delete_user(id):
