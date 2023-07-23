@@ -94,23 +94,11 @@ You should be able to use the application in your browser with the URL prefix 12
 
 ## **R3** - Database system 
 
-## **R4** - ORM (key functionalities and benefits 
+## **R4** - ORM (key functionalities and benefits)
 
 ## **R5** - Endpoints documentation 
 
-### Authentication
-| Endpoint    | Method | Description | Request Body (if applicable) | Response Body (if applicable) |
-|---------|-----|--------|--------|--------|
-| '/auth/register'| POST | | | |
-| '/auth/login'   | POST | | | |
-### Lists
-| Endpoint    | Method | Description | Request Body (if applicable) | Response Body (if applicable) |
-|---------|-----|--------------------|--------|--------|
-| '/list' | GET | | | |
-| '/list/{id}' | GET | | | |
-| '/list' | POST | | {"name" : "Cart", "description" : "Card 5 desc"}| |
-| '/list/{id}' | POST | | {<br>     "name" : "Cart", <br>       "description" : "Card 5 desc"<br>}| |
-
+[Click here for the Endpoint documentation](/docs/endpoints.md)
 
 ## **R6** - ERD of the app 
 
