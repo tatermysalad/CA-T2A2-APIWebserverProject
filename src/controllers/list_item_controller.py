@@ -4,8 +4,8 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 import functools
 from init import db
 from models.list_items import ListItem, list_item_schema, list_items_schema
-from models.lists import List, list_schema, lists_schema
-from models.items import Item, item_schema, items_schema
+from models.lists import List
+from models.items import Item
 from models.users import User
 
 

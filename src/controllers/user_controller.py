@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from init import db, bcrypt
-from models.users import User, user_schema, users_schema
+from models.users import User, user_schema
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from sqlalchemy.exc import IntegrityError
 from psycopg2 import errorcodes
