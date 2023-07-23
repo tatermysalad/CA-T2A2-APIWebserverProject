@@ -112,6 +112,18 @@ The problem being solved by this API web server is to help the travel, ultraligh
 
 ## **R3** - Database system
 
+The Database system chosen for this application is PostgreSQL due to the following advantages:
+
+Open source (free)
+Compatible on all platforms (windows, Linux, MacOS)
+Widely used, supported and documented
+Strong reputation for reliability, scalability, extensibility and data integrity.
+Tools such as psycopg2 helps matching Python and PostgreSQL data types for seamless development process.
+Drawbacks compared to other databases
+
+Memory performance: each client connection is forked as a new process, which is allocated about 10MB of memory. As a result, for read-heavy operations, PostgreSQL's preformance is inferior to other RDBMSs, like MySQL
+
+Popularity: compared to MySQL, PostgreSQL is still less popular, despite recently became more widely used. As a result, there are not as many third-party tools for database management, as well as administrators with experience compared to MySQL.
 ## **R4** - ORM (key functionalities and benefits)
 
 ## **R5** - Endpoints documentation

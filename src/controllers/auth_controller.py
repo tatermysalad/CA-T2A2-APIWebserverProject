@@ -68,8 +68,7 @@ def update_account(id):
         user.email = body_data.get('email') or user.email
         user.password = bcrypt.generate_password_hash(body_data.get('password')).decode('utf-8') or user.password
         # if statement to check if the boolean value exists, this is to avoid comparing true or false values
-        if 'is_admin' in body_data:
-            user.is_admin = body_data.get('is_admin')
+        user.is_admin = body_data.get('is_admin') if 'is_admin' in body_data else user.is_admin
         db.session.commit()
         return user_schema.dump(user)
     else:
