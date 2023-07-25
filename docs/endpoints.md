@@ -6,12 +6,13 @@ The base URL for using the below endpoints can be either localhost or 127.0.0.1 
 [localhost:8080](http://localhost:8080)
 
 [127.0.0.1:8080](http://127.0.0.1:8080)
-### Authentication
-| Endpoint | Method | Description | Authorization | Request Body (if applicable) | Response Body |
-|---|---|---|---|---|---|
-| '/auth/register'| POST | Create User Account | Not required | | |
-| '/auth/login'   | POST | | Bearer Token | | |
-| '/auth/update/{id} | PUT, PATCH || Bearer Token | | |
+### Users
+| Endpoint | Method | Description | Authorization (if required) | Permission | Request Body (if applicable) | Response Body |
+|---|---|---|---|---|---|---|
+| '/user/register'| POST | Create User Account |  | | |
+| '/user/login'   | POST | Create Access Bearer Token  |  | | |
+| '/user/update/{id}' | PUT, PATCH | Update user by user_id | Bearer Token | Admin || |
+| '/user/delete/{id}' | PUT, PATCH | Delete user by user_id | Bearer Token | Admin | |
 ### Lists
 | Endpoint | Method | Description | Authorization | Request Body | Response Body (if applicable) |
 |---|---|---|---|---|---|
