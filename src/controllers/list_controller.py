@@ -1,11 +1,10 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from init import db
+from datetime import date
 from models.lists import List, list_schema, lists_schema
 from models.items import Item
 from models.users import User
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from datetime import date
-import functools
 
 lists_bp = Blueprint('lists', __name__, url_prefix='/lists')
 

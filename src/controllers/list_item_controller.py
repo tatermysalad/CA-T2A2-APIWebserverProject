@@ -1,8 +1,8 @@
-from datetime import date
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-import functools
 from init import db
+from datetime import date
+import functools
 from models.list_items import ListItem, list_item_schema, list_items_schema
 from models.lists import List
 from models.items import Item

@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from init import db
+from datetime import date
 from models.items import Item, item_schema, items_schema
 from models.users import User
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from datetime import date
 
 items_bp = Blueprint('items', __name__, url_prefix='/items')
 

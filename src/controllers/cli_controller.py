@@ -1,11 +1,11 @@
 from flask import Blueprint
 from init import db, bcrypt
+from datetime import date
 from models.users import User
 from models.lists import List
 from models.list_items import ListItem
 from models.items import Item
 from models.categories import Category
-from datetime import date
 
 db_commands = Blueprint("db", __name__)
 

@@ -7,7 +7,7 @@ from psycopg2 import errorcodes
 from datetime import timedelta
 import functools
 
-user_bp = Blueprint('user', __name__, url_prefix='/user')
+users_bp = Blueprint('users', __name__, url_prefix='/users')
 
 def authorise_as_admin(fn):
     @functools.wraps(fn)
@@ -21,7 +21,7 @@ def authorise_as_admin(fn):
     return wrapper
 
 
-@user_bp.route('/register', methods=['POST'])
+@users_bp.route('/register', methods=['POST'])
 def user_register():
     try:
         body_data = request.get_json()
@@ -42,7 +42,7 @@ def user_register():
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
             return jsonify(error=f'The {err.orig.diag.column_name} is required'), 409
         
-@user_bp.route('/login', methods=['POST'])
+@users_bp.route('/login', methods=['POST'])
 def user_login():
     body_data = request.get_json()
     user = db.session.scalar(db.select(User).filter_by(email=body_data.get('email')))
@@ -52,7 +52,7 @@ def user_login():
     else:
         return jsonify(message="Username or password is incorrect"), 401
     
-@user_bp.route('/update/<int:id>', methods=["PUT", "PATCH"])
+@users_bp.route('/update/<int:id>', methods=["PUT", "PATCH"])
 @jwt_required()
 @authorise_as_admin
 def update_account(id):
@@ -74,7 +74,7 @@ def update_account(id):
     else:
         return jsonify(message=f"User not found with id='{id}'"), 404
 
-@user_bp.route('/delete/<int:id>', methods=["DELETE"])
+@users_bp.route('/delete/<int:id>', methods=["DELETE"])
 @jwt_required()
 @authorise_as_admin
 def delete_user(id):
