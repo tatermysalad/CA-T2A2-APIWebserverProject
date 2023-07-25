@@ -103,11 +103,17 @@ With this application, users interact with the database using user-friendly REST
 The problem being solved by this API web server is to help the travel, ultralight, and hiking community to be more conscious of the weight they carry on their trips, providing a way to track and manage gear effectively. This application addresses the following:
 
 1. **Weight Awareness:** Travelers, ultralight enthusiasts, and hikers often face the challenge of carrying limited weight during their journeys. Being conscious of the weight they carry is crucial for their safety, comfort, and overall enjoyment of the trip. Exceeding weight limits can lead to physical strain, fatigue, and increased risk of injuries, particularly during long hikes or demanding travel conditions.
+
 2. **Optimised Packing:** By offering weight tracking and management capabilities, this API enables users to make informed decisions about what to pack and what to leave behind. It encourages them to pack only the essentials and prioritise lightweight gear, leading to a more efficient and optimised packing process.
+
 3. **Environmental Impact:** The hiking and travel community is increasingly focused on reducing its environmental footprint. Carrying excessive weight can lead to higher fuel consumption and increased waste generation when items are discarded along the way. This application can contribute to a more sustainable approach by encouraging users to pack thoughtfully and minimize unnecessary items.
+
 4. **User Safety:** For hikers and adventurers embarking on challenging terrains, managing weight can have a significant impact on their safety. Reducing unnecessary weight can improve balance and stability, reducing the risk of accidents and falls.
+
 5. **Improved Experience:** Carrying less weight can enhance the overall travel or hiking experience. Lighter loads mean less fatigue, more enjoyment of the surroundings, and the ability to cover longer distances comfortably.
+
 6. **Data-Driven Decisions:** The API can store historical weight data, enabling users to analyze their packing habits over time. This data-driven approach empowers travelers to identify patterns, make adjustments, and continuously improve their packing strategies for future trips.
+
 7. **Community Support:** The travel, ultralight, and hiking communities thrive on sharing experiences and knowledge. By providing an API that facilitates weight management and tracking, the application can foster a supportive community where users can exchange tips, recommendations, and insights on how to travel responsibly and efficiently.
 
 ## **R3** - Database system
@@ -251,17 +257,24 @@ Key benefits of an ORM are:
 
 ## **R7** - Detail any third party services in the app
 
-1. Web framework: Flask, which is a microframework used to develop web applications in Python. It comes with a built-in development server and has a fast debugger. Flask 2.2.2 is used in this application.
 
-2. Object Relational Mapper: SQLAlchemy - facilitates the communication between Python programs and the database (PostgreSQL in this case). It translates database tables into Python objects, and converts function calls into SQL statements. In the app, Flask - SQLAlchemy is used, because it is specifically designed to work with Flask, making SQLAlchemy compatible with a Flask app. The version of SQLAlchemy is 1.4.42 and Flask-SQLAlchemy in the app is 3.0.2.
+#### Web framework: Flask
+Flask is a lightweight and flexible web framework for Python. It is designed to be simple and easy to use, allowing developers to build web applications quickly and efficiently. Flask provides the basic tools needed to create web applications, such as routing, request handling, and template rendering. It follows the WSGI (Web Server Gateway Interface) specification and can be easily extended with various Flask extensions for additional functionality.
 
-3. Serialization and deserialization library: Marshmallow - it is framework-agnostic, and it helps convert complex datatypes into native Python datatypes. Marshmallow version in the app is 3.18.0. In this app, Flask - Marshmallow is used because it comes with additional features to make Marshmallow fully compatible with a Flask app, and marshmallow-sqlalchemy is another package that integrates SQLAlchemy and Marshmallow. The version of Flask-Marshmallow is 0.14.0, and marshmallow-sqlalchemy is 0.28.1
+#### Object Relational Mapper: SQLAlchemy
+SQLAlchemy is an Object Relational Mapper (ORM) for Python that enables developers to interact with relational databases using Python objects. It allows you to define database models as Python classes and perform database operations using Python methods, making it easier to work with databases without writing raw SQL queries. SQLAlchemy supports various database backends and provides a high level of abstraction over database interactions.
 
-4. PostgreSQL and Python adapter: psycopg2, its functions are to match Python data types with PostgreSQL datatypes. It also comes with thread safety feature which is desireable in heavily multi-threaded applications that make a large number of concurrent "INSERT"s or "UPDATE"s. The version of psycopg2 used in the app is 2.9.4
+#### Serialization and deserialization library: Marshmallow
+Marshmallow is a popular library in Python used for object serialization and deserialization. It helps convert complex data objects, such as database models or Python dictionaries, to and from JSON or other formats. Marshmallow provides a simple and flexible way to define schemas for data validation, serialization, and deserialization, making it easy to ensure data consistency and structure when exchanging data between different systems.
 
-5. Hashing utility: Bcrypt - its special feature is slow hashing, which prevents brute force attacks on sensitive data such as passwords. In the app, Flask-Bcrypt is used because it comes fully compatible with a Flask app. The version of Flask-Bcrypt is 1.0.1. 
+#### PostgreSQL and Python adapter: psycopg2
+Psycopg2 is a PostgreSQL adapter for Python. It allows Python applications to connect to PostgreSQL databases and perform database operations using Python code. Psycopg2 is a widely used and efficient library, providing a fast and reliable connection between Python applications and PostgreSQL databases.
 
-6. Authorization: JSON Web Token (JWT), provides a secure and compact tool for user authentication. Once logged in, a token will be generated and it will be included in all subsequent requests made by the client, and allows them access to routes, services and resources that are permitted with that token. In the app, the secret key method of signing is used, and Flask-JWT-Extended is required extension, its version is 4.4.4
+#### Hashing utility: Bcrypt
+Bcrypt is a popular cryptographic hashing utility used for securely hashing passwords and other sensitive data. It is designed to be slow and computationally expensive, making it resistant to brute-force attacks. Bcrypt is a preferred choice for password hashing in Python applications due to its strong security features.
+
+#### Authorization: JSON Web Token (JWT)
+JSON Web Token (JWT) is a compact and URL-safe method for representing claims between two parties. It is commonly used for implementing authorization and authentication mechanisms in web applications. A JWT consists of three parts: header, payload, and signature. The header contains metadata, the payload contains claims, and the signature is used to verify the integrity of the token. JWTs are often used to securely transmit information between the client and the server, and they can be easily validated without the need for server-side storage of session data.
 
 
 ## **R8** - Describe project models
