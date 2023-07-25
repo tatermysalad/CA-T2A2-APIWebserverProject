@@ -509,29 +509,32 @@ There are two schemas which are called when there are multiple categories or onl
 ## **R10** - Planning and tracking of tasks
 [Trello](https://trello.com/b/boyMDrFK/t2a2apiwebserver) was used to track the status of the project.
 
-This application was divided into four:
-- Initial proposal
-- Writing code
-- Testing
-- Writing documentation
 
-#### Initial proposal
-- Began with coming up with ideas of what I would find most useful in my life, which would correspond with my skill level.
-- Proposed the idea and made some adjustments as recommended, this included:
-    - Features
-    - Entities
-    - Relationships
-- After this I decided on the appropriate API endpoints
-- CRUD operations for each
-- Finally deciding upon the 3rd party systems to be used.
+#### 1. Initial Proposal:
+- Define the purpose and scope of my API application. What problem does it solve, and what functionalities will it offer?
+- Determine the technologies and frameworks I will use for building the API (Flask for the web framework, SQLAlchemy for ORM, etc.).
+- Identify the data structures and models I need to represent the data that the API will interact with.
+- Plan the endpoints and API routes that will handle various operations (retrieving data, creating new records, updating existing data, etc.).
 
-#### Writing code
+#### 2. Writing Code:
+- Set up your development environment with the necessary tools and dependencies.
+- Create the necessary project structure, including files for the main application, models, routes, and other components.
+- Define the database models using SQLAlchemy to represent your data entities.
+- Implement the API endpoints and their corresponding functions to handle various HTTP requests (GET, POST, PUT, PATCH, DELETE).
+- Connect the API routes to the appropriate functions that interact with the database models to perform CRUD (Create, Read, Update, Delete) operations.
+- Ensure proper error handling and validation for user inputs.
+
+#### 3. Testing:
+- Write test cases to cover different scenarios for each API endpoint.
+- Used manual testing framework to run the tests and ensure the API functions as expected.
+- Test different HTTP methods (GET, POST, PUT, DELETE) with valid and invalid data to verify that the API behaves correctly in various situations.
+- Consider edge cases and potential security vulnerabilities while testing.
+
+#### 4. Writing Documentation:
+- Create clear and concise documentation for your API, including details on each endpoint, their inputs, expected outputs, and error responses.
+- Include examples of API requests and responses to help users understand how to use the API effectively.
+- Add information about authentication and authorization if applicable.
 
 
-#### Testing
-
-
-#### Writing documentation
-- Write documentation detailing which software and why, as well as endpoint details for users.
 
 
