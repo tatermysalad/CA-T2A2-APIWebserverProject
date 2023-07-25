@@ -10,7 +10,7 @@ class Category(db.Model):
     description = db.Column(db.Text)
     date = db.Column(db.Date)
 
-    items = db.relationship("Item", back_populates="category", cascade="all, delete")
+    items = db.relationship("Item", back_populates="category")
 
 
 class CategorySchema(ma.Schema):

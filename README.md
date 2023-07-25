@@ -266,7 +266,7 @@ Key benefits of an ORM are:
 
 ## **R8** - Describe project models
 
-There are 5 models used in this application - Users, Lists, Items, List Items, and Categories.
+There are 5 models used in this application - Users, Lists, Items, List_Items, and Categories.
 
 1. User Model:
 
@@ -276,19 +276,11 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, primary_key=True)
-    f_name = db.Column(db.String)
-    l_name = db.Column(db.String)
-    email = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False)
-    is_admin = db.Column(db.Boolean, default=False, nullable=False)
-    date = db.Column(db.Date)
 
     lists = db.relationship("List", back_populates="user", cascade="all, delete")
     items = db.relationship("Item", back_populates="user", cascade="all,delete")
 ```
-Relationship to List and Item model is the same. 
-One and only one to zero or many ie. one user can have zero or many lists and items.
-When a user is deleted so is their associated lists and items.
+Users relationship to List and Item model are the same; one and only one to zero or many. When a user is deleted so is their associated lists and items.
 
 'user_id' is the primary key of the Users table, and is therefore the foreign key used in the corresponding List and Item tables.
 
@@ -297,13 +289,6 @@ When a user is deleted so is their associated lists and items.
 class UserSchema(ma.Schema):
     lists = fields.List(fields.Nested("ListSchema", exclude=["user"]))
     items = fields.List(fields.Nested("ItemSchema", exclude=["user"]))
-
-    class Meta:
-        ordered = True
-        fields = ("user_id", "f_name", "l_name", "email", "password", "is_admin")
-
-    password = ma.String(validate=Length(min=6))
-
 
 user_schema = UserSchema(exclude=["password"])
 users_schema = UserSchema(many=True, exclude=["password"])
@@ -314,8 +299,226 @@ In both of these cases we remove the 'user' field as it will create a loop.
 
 When used as 'user_schema' or 'users_schema' we exclude the password from visibility.
 
+2. List model
 
+#### Model declaration
+```py
+class List(db.Model):
+    __tablename__ = "lists"
+
+    list_id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+
+    user = db.relationship("User", back_populates="lists")
+    list_items = db.relationship(
+        "ListItem", back_populates="list", cascade="all,delete"
+    )
+```
+The relationship to User model is zero or many to one and only one.
+
+The relationship to the ListItem model is one and only one to zero or many. 
+
+When a list is deleted so is the associated ListItem entries.
+
+'list_id' is the primary key of the List model, and is therefore the foreign key used in the corresponding ListItem model.
+
+'user_id' is the foreign key for the User model.
+
+#### Schema declaration
+```py
+class ListSchema(ma.Schema):
+    user = fields.Nested("UserSchema", only=["email"])
+    list_items = fields.List(fields.Nested("ListItemSchema", exclude=["list"]))
+
+     # New field for total weight
+    total_weight = fields.Float(dump_only=True)
+    @post_dump
+    def calculate_total_weight(self, data, **kwargs):
+        list_items = data.get('list_items', [])
+        total_weight = [item.get('quantity', 1) * item["item"].get('weight', 0) for item in list_items]
+        data['total_weight'] = sum(total_weight)
+        return data
+    class Meta:
+        ordered = True
+        fields = ("list_id", "name", "description", "date", "user", "list_items", "total_weight")
+
+list_schema = ListSchema()
+lists_schema = ListSchema(many=True)
+```
+In the ListSchema, when called the lists corresponding user is nested, with only their email.
+
+The corresponding list_items are also nested, and as there can be multiple these are also listed, which gives more value to the response. 
+
+I have added another field which is 'total_weight' from the items, this uses the weight given in the 'items' table with the quantity in the 'list_items' table so determine a comparable result for the end user.
+
+In list_items we remove the 'list' field as it will create a loop. 
+
+3. List Items Model
+
+#### Model declaration
+```py
+class ListItem(db.Model):
+    __tablename__ = "list_items"
+
+    list_item_id = db.Column(db.Integer, primary_key=True)
+
+    list_id = db.Column(db.Integer, db.ForeignKey("lists.list_id"), nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey("items.item_id"), nullable=False)
+
+    list = db.relationship("List", back_populates="list_items")
+    item = db.relationship("Item", back_populates="list_items")
+```
+The relationship to the list and item models are the same, zero or many to one and only one. As this is a join table, when a record is deleted it is not removed elsewhere. 
+
+'list_item_id' is the primary key for list_items model.
+
+'list_id' and 'item_id' are foreign keys for the list and item model respectively.
+
+#### Schema declaration
+```py
+class ListItemSchema(ma.Schema):
+    list = fields.Nested("ListSchema", exclude=["list_id", "list_items"])
+    item = fields.Nested("ItemSchema", exclude=["item_id"])
+```
+In the schema both the lists and items are nested so as to provide useful information about the entries. A user can update the quantity from the default of 1 if they carry multiple, which will be reflected in the total weight when a list is returned.
+
+4. Items Model
+
+#### Model declaration
+```py
+class Item(db.Model):
+    __tablename__ = "items"
+
+    item_id = db.Column(db.Integer, primary_key=True)
+
+
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.category_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
+
+    category = db.relationship("Category", back_populates="items")
+    user = db.relationship("User", back_populates="items")
+    list_items = db.relationship(
+        "ListItem", back_populates="item", cascade="all,delete"
+    )
+```
+The relationship to the list_item model is one and only one to zero or many. If an item is deleted so are the associated records in the list_items table.
+
+The relationship to the users is zero or many to one and only one. Where items can belong to one user, but a user can have zero or many items. When a user is deleted so are their associated items.
+
+The relationship to the categories is zero or many to one and only one. Where an item can have one category, but a category can have multiple items. If a category is deleted, the associated items are not deleted, this is due to the admin being the only one who can manage the categories and to avoid removal of records.
+
+'item_id' is the primary key for the item model.
+
+'category_id' and 'user_id' are the foreign keys for the category and user model respectively.
+
+#### Schema declaration
+```py
+class ItemSchema(ma.Schema):
+    category = fields.Nested("CategorySchema", only=['name'])
+    user = fields.Nested("UserSchema", only=["email"])
+```
+When the Schema is called both category and user are nested, to avoid server costs only small amounts of information are returned as these will be called the most out of any endpoint.
+
+5. Categories Model
+
+#### Model declaration
+```py
+class Category(db.Model):
+    __tablename__ = "categories"
+
+    category_id = db.Column(db.Integer, primary_key=True)
+
+    items = db.relationship("Item", back_populates="category")
+```
+
+The relationship to the items table is one and only one to zero or many. Where a category can belong to many items, but an item can only have one category. If a category is deleted, the associated items are not deleted, this is due to the admin being the only one who can manage the categories and to avoid removal of records.
+
+'category_id' is the primary key for the category model.
+
+#### Schema declaration
+```py
+class CategorySchema(ma.Schema):
+    items = fields.List(fields.Nested("ItemSchema", exclude=["category"]))
+    class Meta:
+        ordered = True
+        fields = ("category_id", "name", "description", "items")
+class CategoriesSchema(ma.Schema):
+    class Meta:
+        ordered = True
+        fields = ("category_id", "name", "description")
+
+category_schema = CategorySchema()
+categories_schema = CategoriesSchema(many=True)
+```
+There are two schemas which are called when there are multiple categories or only one. The main difference is the list of nested items. This is to reduce server costs if all categories are called then the returns results can be massive.
 
 ## **R9** - Discuss the database relations
 
+1. Users Table - includes all of the users, these either have the permission admin; true or false
+- Attributes in the users table are:
+- When a user is deleted, the associated fields in the list and items table are also deleted (cascade delete)
+- Relationships:
+    - users to lists: one and only one to zero or many.
+
+2. Lists Table - includes all of the lists used by users, these are associated with a user.
+- Attributes in the lists table are:
+- When a list is deleted, the associated fields in the list_items table is also deleted (cascade delete)
+- Foreign key is 'user_id', these link to the users table.
+- Relationships:
+    - lists to users: zero or many to one and only one.
+    - lists to list_items:one and only one to zero or many.
+
+3. List_items Table - this is a join table to hold the information of which item is in which list for the users.
+- Attributes in the list_items table are:
+- When a list_item is deleted, this is not removed in any other table, but if a list or item is removed the record is removed.
+- Foreign keys are the 'list_id' and 'item_id', these link to the lists and items table respectively.
+- Relationships:
+    - list_items to lists: zero or many to one and only one.
+    - list_items to items: zero or many to one and only one.
+
+4. Items Table - includes all of the items created by users.
+- Attributes for the items table are:
+- When an item is deleted, the associated records in the list_items table are removed (cascade delete)
+- Foreign keys are 'user_id' and 'category_id', which link to the users and categories table respectively.
+- Relationships:
+    - items to list_items: one and only one to zero or many.
+    - items to users: zero or many to one and only one.
+    - items to categories: zero or many to one and only one.
+
+5. Categories Table - includes all the possible categories of items.
+- Attributes for the categories table are:
+- When a category is deleted, the attribute in the items table record becomes null.
+- Relationships:
+    - categories to items: one and only one to zero or many.
+
+
 ## **R10** - Planning and tracking of tasks
+[Trello](https://trello.com/b/boyMDrFK/t2a2apiwebserver) was used to track the status of the project.
+
+This application was divided into four:
+- Initial proposal
+- Writing code
+- Testing
+- Writing documentation
+
+#### Initial proposal
+- Began with coming up with ideas of what I would find most useful in my life, which would correspond with my skill level.
+- Proposed the idea and made some adjustments as recommended, this included:
+    - Features
+    - Entities
+    - Relationships
+- After this I decided on the appropriate API endpoints
+- CRUD operations for each
+- Finally deciding upon the 3rd party systems to be used.
+
+#### Writing code
+
+
+#### Testing
+
+
+#### Writing documentation
+- Write documentation detailing which software and why, as well as endpoint details for users.
+
+
