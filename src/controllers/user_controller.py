@@ -81,7 +81,7 @@ def user_login():
     else:
         return jsonify(message="Username or password is incorrect"), 401
 
-
+# added the /update for a conscious decision to update user
 @users_bp.route("/update/<int:id>", methods=["PUT", "PATCH"])
 @jwt_required()
 @authorise_as_admin
@@ -128,7 +128,7 @@ def update_account(id):
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
             return jsonify(message=f"The {err.orig.diag.column_name} is required"), 409
 
-
+# added the /delete to make sure it can't happen accidentally
 @users_bp.route("/delete/<int:id>", methods=["DELETE"])
 @jwt_required()
 @authorise_as_admin
