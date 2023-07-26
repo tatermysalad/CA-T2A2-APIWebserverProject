@@ -86,7 +86,7 @@ Run the application:
 
 `flask run`
 
-You should be able to use the application in your browser with the URL prefix 127.0.0.1:5000/, localhost:5000/, or through setup with Insomnia or Postman.
+You should be able to use the application in your browser with the URL prefix 127.0.0.1:8080/, localhost:8080/, or through setup with Insomnia or Postman.
 
 ## **R1** - The problem
 
