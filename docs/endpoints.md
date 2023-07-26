@@ -1,5 +1,5 @@
 # Endpoints documentation
-### Base URL
+## Base URL
 
 The base URL for using the below endpoints can be either localhost or 127.0.0.1 with the port 8080 or as determined by yourself when running `flask run`
 
@@ -41,13 +41,13 @@ For example a request to create a user would look like http://localhost:8080/use
 #### 400 Bad Request
 ```json
 {
-	"error": "Please enter a password of minimum length 6"
+	"message": "Please enter a password of minimum length 6"
 }
 ```
 #### 409 Conflict
 ```json
 {
-	"error": "User with email 'bob@ross.com' already exists"
+	"message": "User with email 'bob@ross.com' already exists"
 }
 ```
 
@@ -128,7 +128,7 @@ For example a request to create a user would look like http://localhost:8080/use
 #### 409 Conflict
 ```json
 {
-	"error": "User with email 'Frida@Kahlo.com' already exists"
+	"message": "User with email 'Frida@Kahlo.com' already exists"
 }
 ```
 ### /users/delete/{id}
@@ -335,13 +335,13 @@ For example a request to create a user would look like http://localhost:8080/use
 #### 403 Forbidden 
 ```json
 {
-	"error": "Not authorised to edit list id='3'"
+	"message": "List with id='8' not found for user with email='john@tolkien.com'"
 }
 ```
 #### 404 Not Found
 ```json
 {
-	"message": "List with id='8' not found for user with email='john@tolkien.com'"
+	"message": "List with id='8' not found"
 }
 ```
 ### /lists/{id}
@@ -540,7 +540,7 @@ For example a request to create a user would look like http://localhost:8080/use
 #### 403 Forbidden 
 ```json
 {
-	"error": "Not authorised to delete item id='1'"
+	"message": "Not authorised to delete item id='1'"
 }
 ```
 #### 404 Not Found

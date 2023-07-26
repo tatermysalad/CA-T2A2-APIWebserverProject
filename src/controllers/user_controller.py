@@ -39,12 +39,12 @@ def user_register():
             db.session.commit()
             return user_schema.dump(user), 201
         else:
-            return jsonify(error='Please enter a password of minimum length 6'), 400
+            return jsonify(message='Please enter a password of minimum length 6'), 400
     except IntegrityError as err:
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
-            return jsonify(error=f"User with email '{request.get_json().get('email')}' already exists"), 409
+            return jsonify(message=f"User with email '{request.get_json().get('email')}' already exists"), 409
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
-            return jsonify(error=f'The {err.orig.diag.column_name} is required'), 409
+            return jsonify(message=f'The {err.orig.diag.column_name} is required'), 409
         
         
 @users_bp.route('/login', methods=['POST'])
@@ -81,9 +81,9 @@ def update_account(id):
             return jsonify(message=f"User not found with id='{id}'"), 404
     except IntegrityError as err:
         if err.orig.pgcode == errorcodes.UNIQUE_VIOLATION:
-            return jsonify(error=f"User with email '{request.get_json().get('email')}' already exists"), 409
+            return jsonify(message=f"User with email '{request.get_json().get('email')}' already exists"), 409
         if err.orig.pgcode == errorcodes.NOT_NULL_VIOLATION:
-            return jsonify(error=f'The {err.orig.diag.column_name} is required'), 409
+            return jsonify(message=f'The {err.orig.diag.column_name} is required'), 409
 
 @users_bp.route('/delete/<int:id>', methods=["DELETE"])
 @jwt_required()
