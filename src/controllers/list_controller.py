@@ -85,6 +85,7 @@ def update_list(id):
             ),
             404,
         )
+    
 
 
 @lists_bp.route("/<int:id>", methods=["DELETE"])

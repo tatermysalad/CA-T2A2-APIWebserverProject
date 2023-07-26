@@ -1,7 +1,5 @@
 from init import db, ma
-from marshmallow import fields, post_dump
-from models.lists import list_schema
-
+from marshmallow import fields
 
 
 class ListItem(db.Model):

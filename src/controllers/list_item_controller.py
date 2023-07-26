@@ -10,42 +10,42 @@ from models.users import User
 
 
 list_items_bp = Blueprint("list_items", __name__, url_prefix="/<int:id>/items")
-# a user can have the same item in a list so another bp is needed to make sure multiples aren't removed
-list_items_delete_bp = Blueprint(
-    "list_items_delete", __name__, url_prefix="/list_items/<int:id>/"
-)
 
 
 def authorise_as_user_or_admin(fn):
     @functools.wraps(fn)
-    def wrapper(id, *args, **kwargs):
+    def wrapper(id, item_id, *args, **kwargs):
         user_id = get_jwt_identity()
         user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
-
-        list_item_exists = db.session.scalar(
-            db.select(ListItem).filter_by(list_item_id=id)
+        list_item = db.session.scalar(
+            db.select(ListItem).filter_by(list_id=id, item_id=item_id)
         )
-        if list_item_exists:
+        if list_item:
             list_allowed = db.session.scalar(
-                db.select(List).filter_by(list_id=list_item_exists.list_id)
+                db.select(List).filter_by(list_id=list_item.list_id)
             )
             item_allowed = db.session.scalar(
-                db.select(Item).filter_by(item_id=list_item_exists.item_id)
+                db.select(Item).filter_by(item_id=list_item.item_id)
             )
             if user.is_admin or (
                 item_allowed.user_id == int(user_id)
                 and list_allowed.user_id == int(user_id)
             ):
-                return fn(id, *args, **kwargs)
+                return fn(id, item_id, *args, **kwargs)
             else:
                 return (
                     jsonify(
-                        message=f"User with email='{user.email}' not authorised to perform action on list_item with id='{list_item_exists.list_item_id}'"
+                        message=f"User with email='{user.email}' not authorised to perform action on item with id='{item_id}' in list with id='{id}'"
                     ),
                     403,
                 )
         else:
-            return jsonify(message=f"List_Item not found with id='{id}"), 404
+            return (
+                jsonify(
+                    message=f"Item with id='{item_id}' not found in list with id='{id}'"
+                ),
+                404,
+            )
 
     return wrapper
 
@@ -60,17 +60,17 @@ def get_list_items(id):
         if list.user_id == int(user_id) or user.is_admin:
             list_items = db.session.scalars(db.select(ListItem).filter_by(list_id=id))
             return list_items_schema.dump(list_items)
-        else:   
+        else:
             return (
-            jsonify(
-                message=f"List id='{id}' not found for user with email='{user.email}'"
-            ),
-            403,
-        )
+                jsonify(
+                    message=f"List id='{id}' not found for user with email='{user.email}'"
+                ),
+                403,
+            )
     else:
         return (
-            jsonify(
-                message=f"List id='{id}' not found"), 404,
+            jsonify(message=f"List id='{id}' not found"),
+            404,
         )
 
 
@@ -78,8 +78,22 @@ def get_list_items(id):
 @jwt_required()
 def create_list_item(id):
     body_data = request.get_json()
+    item_id = body_data.get("item_id")
     user_id = get_jwt_identity()
     user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+    list_item = db.session.scalar(
+        db.select(ListItem).filter_by(list_id=id, item_id=item_id)
+    )
+    if list_item:
+        list_item.quantity = body_data.get("quantity") or list_item.quantity
+        db.session.commit()
+        return (
+            jsonify(
+                message=f"This item id='{item_id}' is already in list='{id}'",
+                item_quantity=list_item.quantity,
+            ),
+            404,
+        )
     list = db.session.scalar(db.select(List).filter_by(list_id=id))
     item = db.session.scalar(
         db.select(Item).filter_by(item_id=body_data.get("item_id"))
@@ -109,7 +123,7 @@ def create_list_item(id):
     # lets user know unable to find list with id
     elif not list:
         return (
-            jsonify(message=f"List not found with id='{body_data.get('list_id')}"),
+            jsonify(message=f"List not found with id='{id}"),
             404,
         )
     # lets user know unable to find item with id
@@ -120,14 +134,26 @@ def create_list_item(id):
         )
 
 
-@list_items_delete_bp.route("", methods=["DELETE"])
+@list_items_bp.route("/<int:item_id>", methods=["DELETE"])
 @jwt_required()
 @authorise_as_user_or_admin
-def delete_list_item(id):
-    list_item = db.session.scalar(db.select(ListItem).filter_by(list_item_id=id))
+def delete_list_item(id, item_id):
+    list_item = db.session.scalar(
+        db.select(ListItem).filter_by(list_id=id, item_id=item_id)
+    )
     if list_item:
         db.session.delete(list_item)
         db.session.commit()
-        return jsonify(message=f"List Item with id='{id}' deleted"), 200
+        return (
+            jsonify(
+                message=f"Item with id='{item_id}' deleted from list with id='{id}'"
+            ),
+            200,
+        )
     else:
-        return jsonify(message=f"List Item not found with id='{id}'"), 404
+        return (
+            jsonify(
+                message=f"Item with id='{item_id}' not found in list with id='{id}'"
+            ),
+            404,
+        )

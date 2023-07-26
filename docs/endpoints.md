@@ -52,7 +52,7 @@ For example a request to create a user would look like http://localhost:8080/use
 ```
 
 ### /users/login
-* Description: login user
+* Description: Login user and retrieve token
 * Method: POST
 * Authentication: JWT Bearer Token
 * Permission level: Any
@@ -80,7 +80,7 @@ For example a request to create a user would look like http://localhost:8080/use
 }
 ```
 
-### /users/update/{id}
+### /users/update/{user_id}
 * Description: update user by ID
 * Method: PUT, PATCH
 * Authentication: JWT Bearer Token
@@ -131,7 +131,7 @@ For example a request to create a user would look like http://localhost:8080/use
 	"message": "User with email 'Frida@Kahlo.com' already exists"
 }
 ```
-### /users/delete/{id}
+### /users/delete/{user_id}
 * Description: delete user by ID
 * Method: DELETE
 * Authentication: JWT Bearer Token
@@ -230,7 +230,7 @@ For example a request to create a user would look like http://localhost:8080/use
 ]
 ```
 
-### /lists/{id}
+### /lists/{list_id}
 * Description: Get list by ID
 * Method: GET
 * Authentication: JWT Bearer Token
@@ -304,7 +304,7 @@ For example a request to create a user would look like http://localhost:8080/use
 }
 ```
 
-### /lists/{id}
+### /lists/{list_id}
 * Description: update list by ID
 * Method: PUT, PATCH
 * Authentication: JWT Bearer Token
@@ -344,8 +344,8 @@ For example a request to create a user would look like http://localhost:8080/use
 	"message": "List with id='8' not found"
 }
 ```
-### /lists/{id}
-* Description: delete list by ID
+### /lists/{list_id}
+* Description: Delete list by ID
 * Method: DELETE
 * Authentication: JWT Bearer Token
 * Permission level: Admin can delete any list
@@ -411,7 +411,7 @@ For example a request to create a user would look like http://localhost:8080/use
 ]
 ```
 
-### /items/{id}
+### /items/{item_id}
 * Description: Get item by ID
 * Method: GET
 * Authentication: JWT Bearer Token
@@ -482,8 +482,8 @@ For example a request to create a user would look like http://localhost:8080/use
 }
 ```
 
-### /lists/{id}
-* Description: update item by ID
+### /items/{item_id}
+* Description: Update item by ID
 * Method: PUT, PATCH
 * Authentication: JWT Bearer Token
 * Permission level: Admin user can update any item
@@ -524,7 +524,7 @@ For example a request to create a user would look like http://localhost:8080/use
 	"message": "Item with id='11' not found"
 }
 ```
-### /lists/{id}
+### /items/{item_id}
 * Description: delete item by ID
 * Method: DELETE
 * Authentication: JWT Bearer Token
@@ -551,7 +551,7 @@ For example a request to create a user would look like http://localhost:8080/use
 ```
 ## List Items Routes
 
-### /lists/{list_id}/items/
+### /lists/{list_id}/items
 * Description: Get all items in a list
 * Method: GET
 * Authentication: None
@@ -628,10 +628,11 @@ For example a request to create a user would look like http://localhost:8080/use
 * Authentication: JWT Bearer Token
 * Permission level: The Item and List must belong to User. Admin can assign any item to any list.
 * Request body:
+    * Mandatory fields: item_id
 ```json
 {        
-    "quantity" : 4,
-    "item_id" : 2
+    "item_id" : 2,
+    "quantity" : 2
 }
 ```
 * Possible responses: 
@@ -671,8 +672,8 @@ For example a request to create a user would look like http://localhost:8080/use
 }
 ```
 
-### /list_items/{list_item_id}
-* Description: delete list_item by ID
+### /lists/{list_id}/items/{item_id}
+* Description: Delete item in a list by ID
 * Method: DELETE
 * Authentication: JWT Bearer Token
 * Permission level: User can only delete their associations. Admin can delete any list item
@@ -681,19 +682,19 @@ For example a request to create a user would look like http://localhost:8080/use
 #### 200 OK
 ```json
 {
-	"message": "List Item with id='5' deleted"
+	"message": "Item with id='1' not found in list with id='3'"
 }
 ```
 #### 403 Forbidden 
 ```json
 {
-	"message": "User with email='jane@austen.com' not authorised to perform action on list_item with id='4'"
+	"message": "User with email='jane@austen.com' not authorised to perform action on item with id='1' in list with id='1'"
 }
 ```
 #### 404 Not Found
 ```json
 {
-	"message": "List_Item not found with id='9"
+	"message": "Item with id='5' not found in list with id='3'"
 }
 ```
 
