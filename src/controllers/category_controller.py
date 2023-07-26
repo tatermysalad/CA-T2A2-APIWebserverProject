@@ -8,10 +8,12 @@ from models.users import User
 
 categories_bp = Blueprint("categories", __name__, url_prefix="/categories")
 
+# wrapper to determine if user is admin
 def authorise_as_admin(fn):
     @functools.wraps(fn)
     def wrapper(*args, **kwargs):
         user_id = get_jwt_identity()
+        # Select user from table by id
         user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
         if user.is_admin:
             return fn(*args, **kwargs)
@@ -22,12 +24,14 @@ def authorise_as_admin(fn):
 @categories_bp.route('/')
 @jwt_required()
 def get_categories():
+    # get all categories
     categories = db.session.scalars(db.select(Category).order_by(Category.category_id.asc()))
     return categories_schema.dump(categories)
 
 @categories_bp.route('/<int:id>')
 @jwt_required()
 def get_category(id):
+    # select category by id
     category = db.session.scalar(db.select(Category).filter_by(category_id=id))
     if category:
         # logic in categories.py to filter category items for user_id or all for admin
@@ -37,7 +41,7 @@ def get_category(id):
 
 @categories_bp.route('/', methods=["POST"])
 @jwt_required()
-@authorise_as_admin
+@authorise_as_admin # Admin manages the categories
 def create_category():
     body_data = request.get_json()
     category = Category(
@@ -51,7 +55,7 @@ def create_category():
 
 @categories_bp.route('/<int:id>', methods=["PUT", "PATCH"])
 @jwt_required()
-@authorise_as_admin
+@authorise_as_admin # Admin manages the categories
 def update_category(id):
     body_data = request.get_json()
     category = db.session.scalar(db.select(Category).filter_by(category_id=id))
@@ -65,8 +69,9 @@ def update_category(id):
     
 @categories_bp.route('/<int:id>', methods=["DELETE"])
 @jwt_required()
-@authorise_as_admin
+@authorise_as_admin # Admin manages the categories
 def delete_category(id):
+    # get category by id
     category = db.session.scalar(db.select(Category).filter_by(category_id=id))
     if category:
         db.session.delete(category)

@@ -269,10 +269,16 @@ For example a request to create a user would look like http://localhost:8080/use
 	"total_weight": 1008.0
 }
 ```
-#### 404 Not Found
+#### 403 Forbidden
 ```json
 {
 	"message": "List with id='3' not found for user with email='john@tolkien.com'"
+}
+```
+#### 404 Not Found
+```json
+{
+	"message": "List with id='3' not found"
 }
 ```
 
@@ -665,10 +671,23 @@ For example a request to create a user would look like http://localhost:8080/use
 	}
 }
 ```
-#### 404 Not Found
+#### 207 Multi Status
+```json
+{
+	"message": "This item id='5' is already in list id='3'",
+	"item_quantity": 1
+}
+```
+#### 403 Forbidden
 ```json
 {
 	"message": "List or Item not found for user with email='jane@austen.com'"
+}
+```
+#### 404 Not Found
+```json
+{
+	"message": "Item not found with id='3'"
 }
 ```
 

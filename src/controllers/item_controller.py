@@ -12,11 +12,14 @@ items_bp = Blueprint('items', __name__, url_prefix='/items')
 def get_item():
     # if user admin display all lists, otherwise user specific
     user = get_jwt_identity()
+    # determine if selected user is an admin, true or false
     user_admin = db.session.scalar(db.select(User).filter_by(user_id=user)).is_admin
     if user_admin:
+        # select all items
         items = db.session.scalars(db.select(Item).order_by(Item.date.desc()))
         return items_schema.dump(items)
     else:
+        # select items by user_id
         items = db.session.scalars(db.select(Item).filter_by(user_id=user))
         return items_schema.dump(items)
 
@@ -24,10 +27,13 @@ def get_item():
 @jwt_required()
 def get_list(id):
     user_id = get_jwt_identity()
+    # get user by id
     user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+    # get item by id
     item = db.session.scalar(db.select(Item).filter_by(item_id=id))
     # if user admin display, or check if user owns the list
     if item:
+        # if the item belongs to the user or is an admin then proceed, otherwise throw 403
         if item.user_id != int(user_id) and not user.is_admin:
             return jsonify(message=f"Item with id='{id}' not found for user with email='{user.email}'"), 403
         return item_schema.dump(item)
@@ -38,7 +44,7 @@ def get_list(id):
 @jwt_required()
 def create_item():
     body_data = request.get_json()
-
+    # Create item by class
     item = Item(
         name=body_data.get('name'),
         description=body_data.get('description'),
@@ -56,9 +62,12 @@ def create_item():
 def update_item(id):
     body_data = request.get_json()
     user_id = get_jwt_identity()
+    # get user by id
     user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+    # get item by id
     item = db.session.scalar(db.select(Item).filter_by(item_id=id))
     if item:
+        # if the item belongs to the user or an admin proceed, otherwise 403
         if item.user_id != int(user_id) and not user.is_admin:
             return jsonify(message=f"Item with id='{id}' not found for user with email='{user.email}'"), 403
         item.name = body_data.get('name') or item.name
@@ -74,9 +83,12 @@ def update_item(id):
 @jwt_required()
 def delete_item(id):
     user_id = get_jwt_identity()
+    # get user by id
     user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+    # get item by id
     item = db.session.scalar(db.select(Item).filter_by(item_id=id))
     if item:
+        # if the item belongs to the user or an admin proceed, otherwise 403
         if item.user_id != int(user_id) and not user.is_admin:
             return jsonify(error=f"Not authorised to delete item id='{id}'"), 403
         db.session.delete(item)

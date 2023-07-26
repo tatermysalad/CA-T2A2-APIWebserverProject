@@ -21,10 +21,10 @@ class ListSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=["email"])
     list_items = fields.List(fields.Nested("ListItemSchema", only=["quantity", "item"]))
 
-     # New field for total weight
+    # New field for total weight
     total_weight = fields.Float(dump_only=True)
 
-    # Method to calculate the total weight based on list_items
+    # Post dump method to calculate the total weight based on list_items
     @post_dump
     def calculate_total_weight(self, data, **kwargs):
         list_items = data.get('list_items', [])

@@ -12,7 +12,7 @@ db_commands = Blueprint("db", __name__)
 
 @db_commands.cli.command("create")
 def create_db():
-    db.create_all()
+    db.create_all() # create tables based on models
     print("Tables created")
 
 
@@ -30,7 +30,7 @@ def seed_db():
             date=date.today(),
         ),
     ]
-    db.session.add_all(categories)
+    db.session.add_all(categories) # add categories to table using class
     users = [
         User(
             email="admin@admin.com",
@@ -53,7 +53,7 @@ def seed_db():
             date=date.today(),
         ),
     ]
-    db.session.add_all(users)
+    db.session.add_all(users) # add users to table using class
     lists = [
         List(
             name="Bag 1",
@@ -74,7 +74,7 @@ def seed_db():
             user=users[2],
         ),
     ]
-    db.session.add_all(lists)
+    db.session.add_all(lists) # add lists to table using class
     items = [
         Item(
             name="Tent",
@@ -117,7 +117,7 @@ def seed_db():
             category=categories[1],
         ),
     ]
-    db.session.add_all(items)
+    db.session.add_all(items) # add items to table using class
     list_items = [
         ListItem(
             list=lists[0],
@@ -144,12 +144,12 @@ def seed_db():
             date=date.today(),
         ),
     ]
-    db.session.add_all(list_items)
-    db.session.commit()
+    db.session.add_all(list_items) # add list_items to table using class
+    db.session.commit() # commit the changes to the database
     print("Tables seeded")
 
 
 @db_commands.cli.command("drop")
 def drop_db():
-    db.drop_all()
+    db.drop_all() # delete tables, but leave the database
     print("Tables dropped")

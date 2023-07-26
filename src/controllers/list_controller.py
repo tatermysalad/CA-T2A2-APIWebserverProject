@@ -7,6 +7,7 @@ from models.items import Item
 from models.users import User
 from controllers.list_item_controller import list_items_bp
 
+# blueprints and nested blueprint for list_items
 lists_bp = Blueprint("lists", __name__, url_prefix="/lists")
 lists_bp.register_blueprint(list_items_bp)  # path is in list_items_controller.py
 
@@ -18,9 +19,11 @@ def get_all_lists():
     user_id = get_jwt_identity()
     user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
     if user.is_admin:
+        # if admin display all
         lists = db.session.scalars(db.select(List).order_by(List.date.desc()))
         return lists_schema.dump(lists)
     else:
+        # Filter by user_id
         lists = db.session.scalars(db.select(List).filter_by(user_id=user_id))
         return lists_schema.dump(lists)
 
@@ -29,10 +32,13 @@ def get_all_lists():
 @jwt_required()
 def get_list(id):
     user_id = get_jwt_identity()
+    # get user by user_id
     user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+    # get list by id
     list = db.session.scalar(db.select(List).filter_by(list_id=id))
     # if user admin display, or check if user owns the list
     if list:
+        # if the item belongs to the user or an admin proceed, otherwise 403
         if list.user_id == int(user_id) or user.is_admin:
             return list_schema.dump(list)
         else:
@@ -40,7 +46,7 @@ def get_list(id):
                 jsonify(
                     message=f"List id='{id}' not found for user with email='{user.email}'"
                 ),
-                404,
+                403,
             )
     else:
         return (
@@ -59,7 +65,7 @@ def create_list():
         date=date.today(),
         user_id=get_jwt_identity(),
     )
-    db.session.add(list)
+    db.session.add(list) # add list created class to db
     db.session.commit()
     return list_schema.dump(list), 201
 
@@ -69,9 +75,12 @@ def create_list():
 def update_list(id):
     body_data = request.get_json()
     user_id = get_jwt_identity()
+    # get user
     user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+    # get list
     list = db.session.scalar(db.select(List).filter_by(list_id=id))
     if list:
+        # if the item belongs to the user or an admin proceed, otherwise 403
         if not (user.is_admin or list.user_id == int(user_id)):
             return jsonify(message=f"List with id='{id}' not found for user with email='{user.email}'"), 403
         list.name = body_data.get("name") or list.name
@@ -87,14 +96,16 @@ def update_list(id):
         )
     
 
-
 @lists_bp.route("/<int:id>", methods=["DELETE"])
 @jwt_required()
 def delete_list(id):
     user_id = get_jwt_identity()
+    # get user by id
     user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+    # get list by id
     list = db.session.scalar(db.select(List).filter_by(list_id=id))
     if list:
+        # if the item belongs to the user or an admin proceed, otherwise 403
         if not (user.is_admin or list.user_id == int(user_id)):
             return jsonify(message=f"Not authorised to delete list id='{id}'"), 403
         db.session.delete(list)

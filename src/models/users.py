@@ -24,8 +24,5 @@ class UserSchema(ma.Schema):
         ordered = True
         fields = ("user_id", "f_name", "l_name", "email", "password", "is_admin")
 
-
-
-
 user_schema = UserSchema(exclude=["password"])
 users_schema = UserSchema(many=True, exclude=["password"])

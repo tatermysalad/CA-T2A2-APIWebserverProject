@@ -11,22 +11,27 @@ from models.users import User
 
 list_items_bp = Blueprint("list_items", __name__, url_prefix="/<int:id>/items")
 
-
+# wrapper to determine if both list and item belong to the user
 def authorise_as_user_or_admin(fn):
     @functools.wraps(fn)
     def wrapper(id, item_id, *args, **kwargs):
         user_id = get_jwt_identity()
+        # get user
         user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+        # get list_item by list and item id's
         list_item = db.session.scalar(
             db.select(ListItem).filter_by(list_id=id, item_id=item_id)
         )
         if list_item:
+            # find list by the returned list_id from the list_item
             list_allowed = db.session.scalar(
                 db.select(List).filter_by(list_id=list_item.list_id)
             )
+            # find item by the returned item_id from the list_item
             item_allowed = db.session.scalar(
                 db.select(Item).filter_by(item_id=list_item.item_id)
             )
+            # if the user is an admin, or both of the items belong to the logged in user then proceed, otherwise 403
             if user.is_admin or (
                 item_allowed.user_id == int(user_id)
                 and list_allowed.user_id == int(user_id)
@@ -39,6 +44,7 @@ def authorise_as_user_or_admin(fn):
                     ),
                     403,
                 )
+        # if nothing found 404
         else:
             return (
                 jsonify(
@@ -54,9 +60,12 @@ def authorise_as_user_or_admin(fn):
 @jwt_required()
 def get_list_items(id):
     user_id = get_jwt_identity()
+    # get user by jwt_id
     user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+    # get list by endpoint id
     list = db.session.scalar(db.select(List).filter_by(list_id=id))
     if list:
+        # if the list belongs to the user or user is an admin proceed, otherwise 403
         if list.user_id == int(user_id) or user.is_admin:
             list_items = db.session.scalars(db.select(ListItem).filter_by(list_id=id))
             return list_items_schema.dump(list_items)
@@ -78,27 +87,35 @@ def get_list_items(id):
 @jwt_required()
 def create_list_item(id):
     body_data = request.get_json()
-    item_id = body_data.get("item_id")
     user_id = get_jwt_identity()
+    # item_id used in multiple places
+    item_id = body_data.get("item_id")
+    # get the user by jwt_id
     user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+    # get the list item by list_id and item_id in request
     list_item = db.session.scalar(
         db.select(ListItem).filter_by(list_id=id, item_id=item_id)
     )
     if list_item:
+        # if the list_item connection is already there, then update the quantity with user amount and 207
         list_item.quantity = body_data.get("quantity") or list_item.quantity
         db.session.commit()
         return (
             jsonify(
-                message=f"This item id='{item_id}' is already in list='{id}'",
+                message=f"This item id='{item_id}' is already in list id='{id}'",
                 item_quantity=list_item.quantity,
             ),
-            404,
+            207,
         )
+    # get list by id
     list = db.session.scalar(db.select(List).filter_by(list_id=id))
+    # get item by id
     item = db.session.scalar(
-        db.select(Item).filter_by(item_id=body_data.get("item_id"))
+        db.select(Item).filter_by(item_id=item_id)
     )
+    # if both list and item exist
     if list and item:
+        # if the item belongs to the user or an admin proceed, otherwise 403
         if user.is_admin or (
             item.user_id == int(user_id) and list.user_id == int(user_id)
         ):
@@ -112,13 +129,13 @@ def create_list_item(id):
             db.session.add(list_item)
             db.session.commit()
             return list_item_schema.dump(list_item), 201
-        # if not allowed to create
+        # if not allowed to create 403
         else:
             return (
                 jsonify(
                     message=f"List or Item not found for user with email='{user.email}'"
                 ),
-                404,
+                403,
             )
     # lets user know unable to find list with id
     elif not list:
@@ -129,18 +146,21 @@ def create_list_item(id):
     # lets user know unable to find item with id
     else:
         return (
-            jsonify(message=f"Item not found with id='{body_data.get('item_id')}"),
+            jsonify(message=f"Item not found with id='{item_id}"),
             404,
         )
 
 
 @list_items_bp.route("/<int:item_id>", methods=["DELETE"])
 @jwt_required()
+# wrapper for authorisation
 @authorise_as_user_or_admin
 def delete_list_item(id, item_id):
+    # retrieve list_item by list and item id
     list_item = db.session.scalar(
         db.select(ListItem).filter_by(list_id=id, item_id=item_id)
     )
+    # if list_item exists delete
     if list_item:
         db.session.delete(list_item)
         db.session.commit()

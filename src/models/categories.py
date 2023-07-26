@@ -21,16 +21,17 @@ class CategorySchema(ma.Schema):
         ordered = True
         fields = ("category_id", "name", "description", "items")
 
-        # Define a custom method to filter items based on the user (e.g., current user)
+    # Custom method to filter items in category based on the user
     def filter_items(self, category):
         user_id = get_jwt_identity()
+        # get user by jwt_id
         user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
         # Filter items to include only those that belong to the current user or all if admin
         filtered_items = [item for item in category.items if item.user_id == int(user_id) or user.is_admin]
 
         item_schema = ItemSchema(exclude=["category"]) 
-        serialised_items = item_schema.dump(filtered_items, many=True)
-        return serialised_items
+        items = item_schema.dump(filtered_items, many=True)
+        return items
     
     items = fields.Method("filter_items")
 class CategoriesSchema(ma.Schema):
