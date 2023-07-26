@@ -5,7 +5,7 @@ from controllers.cli_controller import db_commands
 from controllers.user_controller import users_bp
 from controllers.list_controller import lists_bp
 from controllers.item_controller import items_bp
-from controllers.list_item_controller import list_items_bp
+from controllers.list_item_controller import list_items_delete_bp
 from controllers.category_controller import categories_bp
 
 def create_app():
@@ -30,8 +30,8 @@ def create_app():
 
     app.register_blueprint(items_bp)
 
-    app.register_blueprint(list_items_bp)
-
     app.register_blueprint(categories_bp)
+
+    app.register_blueprint(list_items_delete_bp)
 
     return app

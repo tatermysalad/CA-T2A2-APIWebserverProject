@@ -1,7 +1,5 @@
 from init import db, ma
 from marshmallow import fields
-from marshmallow.validate import Length
-
 
 class User(db.Model):
     __tablename__ = "users"
@@ -26,7 +24,7 @@ class UserSchema(ma.Schema):
         ordered = True
         fields = ("user_id", "f_name", "l_name", "email", "password", "is_admin")
 
-    password = ma.String(validate=Length(min=6))
+
 
 
 user_schema = UserSchema(exclude=["password"])

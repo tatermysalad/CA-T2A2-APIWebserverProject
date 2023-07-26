@@ -1,7 +1,5 @@
 from init import db, ma
 from marshmallow import fields, post_dump
-from marshmallow.validate import Length
-
 
 class List(db.Model):
     __tablename__ = "lists"
@@ -21,7 +19,7 @@ class List(db.Model):
 
 class ListSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=["email"])
-    list_items = fields.List(fields.Nested("ListItemSchema", exclude=["list"]))
+    list_items = fields.List(fields.Nested("ListItemSchema", only=["quantity", "item"]))
 
      # New field for total weight
     total_weight = fields.Float(dump_only=True)

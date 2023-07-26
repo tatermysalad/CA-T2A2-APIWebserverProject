@@ -1,5 +1,7 @@
 from init import db, ma
 from marshmallow import fields
+from flask_jwt_extended import get_jwt_identity
+from models.users import User
 
 
 class Item(db.Model):
@@ -37,6 +39,20 @@ class ItemSchema(ma.Schema):
             "user",
         )
 
+    def filter_items(self, item):
+        user_id = get_jwt_identity()
+        user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+
+
+        # Check if the user is an admin or the item belongs to the user
+        if item.user_id == int(user_id) or user.is_admin:
+            return item
+
+        # Return None to exclude the item from the result if the condition is not met
+        return None
+
+    # Override the "item" field to apply the custom filter
+    item = fields.Method("filter_items", data_key="item")
 
 item_schema = ItemSchema()
 items_schema = ItemSchema(many=True)

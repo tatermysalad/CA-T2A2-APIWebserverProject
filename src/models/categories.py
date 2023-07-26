@@ -1,5 +1,8 @@
 from init import db, ma
 from marshmallow import fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from models.items import ItemSchema
+from models.users import User
 
 
 class Category(db.Model):
@@ -14,10 +17,22 @@ class Category(db.Model):
 
 
 class CategorySchema(ma.Schema):
-    items = fields.List(fields.Nested("ItemSchema", exclude=["category"]))
     class Meta:
         ordered = True
         fields = ("category_id", "name", "description", "items")
+
+        # Define a custom method to filter items based on the user (e.g., current user)
+    def filter_items(self, category):
+        user_id = get_jwt_identity()
+        user = db.session.scalar(db.select(User).filter_by(user_id=user_id))
+        # Filter items to include only those that belong to the current user or all if admin
+        filtered_items = [item for item in category.items if item.user_id == int(user_id) or user.is_admin]
+
+        item_schema = ItemSchema(exclude=["category"]) 
+        serialised_items = item_schema.dump(filtered_items, many=True)
+        return serialised_items
+    
+    items = fields.Method("filter_items")
 class CategoriesSchema(ma.Schema):
     class Meta:
         ordered = True

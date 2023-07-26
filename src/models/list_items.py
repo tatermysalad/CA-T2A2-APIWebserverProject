@@ -1,5 +1,7 @@
 from init import db, ma
-from marshmallow import fields
+from marshmallow import fields, post_dump
+from models.lists import list_schema
+
 
 
 class ListItem(db.Model):
@@ -25,4 +27,4 @@ class ListItemSchema(ma.Schema):
 
 
 list_item_schema = ListItemSchema()
-list_items_schema = ListItemSchema(many=True)
+list_items_schema = ListItemSchema(many=True, exclude=["list"])
