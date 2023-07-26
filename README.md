@@ -254,9 +254,9 @@ Flask is a lightweight and flexible web framework for Python. It is designed to 
 
 SQLAlchemy is an Object Relational Mapper (ORM) for Python that enables developers to interact with relational databases using Python objects. It allows you to define database models as Python classes and perform database operations using Python methods, making it easier to work with databases without writing raw SQL queries. SQLAlchemy supports various database backends and provides a high level of abstraction over database interactions.
 
-#### Serialization and deserialization library: Marshmallow
+#### Serialisation and deserialisation library: Marshmallow
 
-Marshmallow is a popular library in Python used for object serialization and deserialization. It helps convert complex data objects, such as database models or Python dictionaries, to and from JSON or other formats. Marshmallow provides a simple and flexible way to define schemas for data validation, serialization, and deserialization, making it easy to ensure data consistency and structure when exchanging data between different systems.
+Marshmallow is a popular library in Python used for object serialisation and deserialisation. It helps convert complex data objects, such as database models or Python dictionaries, to and from JSON or other formats. Marshmallow provides a simple and flexible way to define schemas for data validation, serialisation, and deserialisation, making it easy to ensure data consistency and structure when exchanging data between different systems.
 
 #### PostgreSQL and Python adapter: psycopg2
 
@@ -266,9 +266,9 @@ Psycopg2 is a PostgreSQL adapter for Python. It allows Python applications to co
 
 Bcrypt is a popular cryptographic hashing utility used for securely hashing passwords and other sensitive data. It is designed to be slow and computationally expensive, making it resistant to brute-force attacks. Bcrypt is a preferred choice for password hashing in Python applications due to its strong security features.
 
-#### Authorization: JSON Web Token (JWT)
+#### Authorisation: JSON Web Token (JWT)
 
-JSON Web Token (JWT) is a compact and URL-safe method for representing claims between two parties. It is commonly used for implementing authorization and authentication mechanisms in web applications. A JWT consists of three parts: header, payload, and signature. The header contains metadata, the payload contains claims, and the signature is used to verify the integrity of the token. JWTs are often used to securely transmit information between the client and the server, and they can be easily validated without the need for server-side storage of session data.
+JSON Web Token (JWT) is a compact and URL-safe method for representing claims between two parties. It is commonly used for implementing authorisation and authentication mechanisms in web applications. A JWT consists of three parts: header, payload, and signature. The header contains metadata, the payload contains claims, and the signature is used to verify the integrity of the token. JWTs are often used to securely transmit information between the client and the server, and they can be easily validated without the need for server-side storage of session data.
 
 ## **R8** - Describe project models
 

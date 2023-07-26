@@ -12,7 +12,7 @@ For example a request to create a user would look like http://localhost:8080/use
 ## User Routes
 
 ### /users/register
-* Description: create user
+* Description: Create user
 * Method: GET
 * Authentication: None
 * Permission level: Any 
@@ -81,7 +81,7 @@ For example a request to create a user would look like http://localhost:8080/use
 ```
 
 ### /users/update/{user_id}
-* Description: update user by ID
+* Description: Update user by ID
 * Method: PUT, PATCH
 * Authentication: JWT Bearer Token
 * Permission level: Admin can update any user and grant admin privileges
@@ -132,7 +132,7 @@ For example a request to create a user would look like http://localhost:8080/use
 }
 ```
 ### /users/delete/{user_id}
-* Description: delete user by ID
+* Description: Delete user by ID
 * Method: DELETE
 * Authentication: JWT Bearer Token
 * Permission level: Admin
@@ -283,7 +283,7 @@ For example a request to create a user would look like http://localhost:8080/use
 ```
 
 ### /lists
-* Description: create list for logged in user
+* Description: Create list for logged in user
 * Method: POST
 * Authentication: JWT Bearer Token
 * Permission level: Admin
@@ -311,7 +311,7 @@ For example a request to create a user would look like http://localhost:8080/use
 ```
 
 ### /lists/{list_id}
-* Description: update list by ID
+* Description: Update list by ID
 * Method: PUT, PATCH
 * Authentication: JWT Bearer Token
 * Permission level: Admin user can update any list
@@ -456,7 +456,7 @@ For example a request to create a user would look like http://localhost:8080/use
 ```
 
 ### /items
-* Description: create item for logged in user
+* Description: Create item for logged in user
 * Method: POST
 * Authentication: JWT Bearer Token
 * Permission level: Any
@@ -531,7 +531,7 @@ For example a request to create a user would look like http://localhost:8080/use
 }
 ```
 ### /items/{item_id}
-* Description: delete item by ID
+* Description: Delete item by ID
 * Method: DELETE
 * Authentication: JWT Bearer Token
 * Permission level: Admin can delete any item
@@ -806,7 +806,7 @@ For example a request to create a user would look like http://localhost:8080/use
 ```
 
 ### /categories/{category_id}
-* Description: update category by ID
+* Description: Update category by ID
 * Method: PUT, PATCH
 * Authentication: JWT Bearer Token
 * Permission level: Admin only
@@ -841,7 +841,7 @@ For example a request to create a user would look like http://localhost:8080/use
 }
 ```
 ### /categories/{category_id}
-* Description: delete category by ID
+* Description: Delete category by ID
 * Method: DELETE
 * Authentication: JWT Bearer Token
 * Permission level: Admin only
